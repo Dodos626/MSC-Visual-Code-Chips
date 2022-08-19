@@ -49,7 +49,6 @@ export class Editor {
     $toastMessages;
     
     $toolboxspace;
-    
     language;
     code;
     clipboard;
@@ -241,15 +240,16 @@ export class Editor {
         this.SetUpContextMenu_();
 
         this.SetUpToolbox_(toolboxInfo);
+
         this.SetWorkspace_DragAndDrop();
         this.SetUpEditorToolbar_();
 
         this.Render();
         this.ApplyTheme();
-        console.log( this.CreateThemeStructure() );
+        // console.log( this.CreateThemeStructure() );
 
         this.productionPaths = this.language.ComputeReachabilityMatrix();
-        console.log(this.productionPaths);
+        // console.log(this.productionPaths);
     }
 
     IsCorrectTheme(theme){
@@ -701,6 +701,17 @@ export class Editor {
             ],
         ]);
         
+        this.editorToolbar.AddContextMenu('New', [
+            [
+                {
+                    name:       'Category',
+                    shortcut:   'Ctrl+Q',
+                    disabled:   () => this.viewMode !== EditorElementViewMode.BlockView,
+                    handler:    () => this.EventHandler_NewCategory()
+                },
+            ],
+        ]);
+
         this.editorToolbar.AddButtonCategory([
             {
                 class:      'editor-toolbar-undo-button',
@@ -775,6 +786,7 @@ export class Editor {
     }
 
     SetUpToolbox_(toolboxInfo){
+        
         this.toolbox = new Toolbox(this.$toolboxspace, toolboxInfo);
         this.toolbox.SetToolbox_MaxWidth(() => {
             return 0.8 * this.$container.width();
@@ -824,7 +836,7 @@ export class Editor {
                         shortcut: 'Ctrl+S',
                         disabled: this.viewMode !== EditorElementViewMode.BlockView,
                         handler: () => this.EventHandler_DownloadCode_()
-                    }
+                    },
                 ],
                 [
                     {
@@ -2211,5 +2223,9 @@ export class Editor {
         this.editorToolbar.DisableButton('editor-toolbar-js-button');
 
         this.generationPathPopup.Render();
+    }
+
+    EventHandler_NewCategory(){
+        this.toolbox.UpdateCategories({name:"TMP: " + (Date.now() % 100).toString(), icon:"./Images/Toolbox/placeholder.svg", blocks:[]})
     }
 }

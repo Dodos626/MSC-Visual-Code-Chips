@@ -313,7 +313,8 @@ export class Toolbox {
      */
     constructor($container, categories, theme) {
         assert($container);
-
+        // TEO
+        // categories.push({name:"My Blocks", icon:"", blocks:[]});
         this.id = 'toolbox' + Toolbox.currId++;
 
         for (let category of categories){
@@ -482,6 +483,55 @@ export class Toolbox {
         this.$toolboxBlocks.scrollTop(scrollTop);
 
         this.ApplyTheme();
+    }
+
+    // NEW CODE
+    UpdateCategories(category){
+        // creates the menu category and puts it in the categories
+        this.categories[category.name] = (new MenuCategory(category.name, category.icon, '#A5A5A5'));
+
+        // maps the blocks and renders them
+        this.blocks[category.name] = category.blocks.map(blockJson => {
+            let b = EditorElementParser.FromJson( blockJson, block => this.BindElem(block) );
+            this.SetBlockDragEvents(category.name, b);
+            return b;
+        });
+
+        // renders the new category
+        this.RenderNewCategory(this.categories[category.name],category.name);
+        this.ApplyTheme();
+        console.log(this.categories);
+    }
+
+    RenderNewCategory(category,categoryName){
+        this.RenderAllBlocks()
+        let $categoryContainer = $('<div/>').addClass('category-container');
+        category.Render($categoryContainer);
+
+        this.$toolboxMenu.append($categoryContainer);
+        
+        category.GetView().on('click', () => {
+            if (this.selected === category){
+                this.Select_(undefined);
+                this.$toolboxBlocksContainer.hide();
+            }else{
+                this.$toolboxBlocksContainer.show();
+                this.Select_(category);
+                this.autoScrolling = true;
+                this.$toolboxBlocks.animate(
+                    {
+                        scrollTop: this.$scrollTargets[categoryName].offset().top 
+                                    + this.$toolboxBlocks.scrollTop() 
+                                    - this.$toolboxBlocks.offset().top
+                                    - 20
+                    }, 
+                    400, 
+                    () => {
+                        this.autoScrolling = false;
+                    }
+                )
+            }
+        });
     }
 
     Render() {
