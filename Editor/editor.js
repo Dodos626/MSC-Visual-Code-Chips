@@ -36,7 +36,7 @@ import { AstHost } from '../Generators/AstHost.js';
 import { ToJavascriptVisitor } from '../Generators/ToJavascriptVisitor.js';
 import { EditorToolbar } from './EditorToolbar.js';
 import { QuickReplaceCommand } from './EditorCommands/QuickReplaceCommand.js';
-
+import { modal } from './Modal.js';
 
 export class Editor {
 
@@ -49,6 +49,10 @@ export class Editor {
     $toastMessages;
     
     $toolboxspace;
+    
+    toolbarModal;
+    $toolbarModalContainer;
+
     language;
     code;
     clipboard;
@@ -233,17 +237,21 @@ export class Editor {
         this.language = language;
         
         this.SetTheme(themeJson);
-
+        
         this.InitializeCode_();
         this.InitializeView_();
         this.InitializeEvents_();
         this.SetUpContextMenu_();
-
+        
         this.SetUpToolbox_(toolboxInfo);
 
         this.SetWorkspace_DragAndDrop();
+
+        this.SetupModal_NewCategory();
         this.SetUpEditorToolbar_();
 
+        
+        
         this.Render();
         this.ApplyTheme();
         // console.log( this.CreateThemeStructure() );
@@ -495,9 +503,16 @@ export class Editor {
         this.$code = $('<div/>').addClass('code');
         this.$jsCode = $('<textarea readonly>').addClass('js-code');
         this.$contextMenuContainer = $('<div/>').addClass('editor-context-menu-container');
+
+        this.$toolbarModalContainer = $('<div/>').addClass('editor-toolbar-modal-container');
+
         this.$toastMessages = $('<div/>').addClass('editor-toast-messages');
         this.$workspaceAndToolbox = $('<div/>').addClass('workspace-and-toolbox');
         this.$editorToolbarContainer = $('<div/>').addClass('editor-toolbar-container');
+        
+        
+
+        
 
         this.$editorToolbarContainer.click((e) => {
             e.stopPropagation();
@@ -518,7 +533,7 @@ export class Editor {
         this.$workspaceAndToolbox.append(this.$toolboxspace, this.$workspace);
 
         this.$editor = $('<div/>').addClass('editor').attr('id', this.id);
-        this.$editor.append(this.$editorToolbarContainer, this.$workspaceAndToolbox);
+        this.$editor.append(this.$editorToolbarContainer, this.$toolbarModalContainer, this.$workspaceAndToolbox);
         
         this.$editor.on('click', () => {
             this.$contextMenuContainer.empty();
@@ -2226,6 +2241,26 @@ export class Editor {
     }
 
     EventHandler_NewCategory(){
-        this.toolbox.UpdateCategories({name:"TMP: " + (Date.now() % 100).toString(), icon:"./Images/Toolbox/placeholder.svg", blocks:[]})
+        this.toolbarModal.Open_();
+    }
+
+    SetupModal_NewCategory(){
+        this.toolbarModal = new modal("New_Category", 
+        "text",   
+        ["cancel","ok"] , 
+        [
+            ()=>{
+            this.toolbarModal.Close_();
+            },
+            ()=>{
+                let text = this.toolbarModal.GetInputValue();
+                if(text == null || text == ""){
+                    return;
+                }
+                this.toolbox.UpdateCategories({name: text, icon:"./Images/Toolbox/placeholder.svg", blocks:[]})
+                this.toolbarModal.Close_();
+            }
+        ], 
+        this.$toolbarModalContainer);
     }
 }
