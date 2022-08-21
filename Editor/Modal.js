@@ -3,11 +3,12 @@ export class modal {
   text;
   buttons = [];
   handlers = [];
-  input;
+  input = "";
 
   $modal
   $modal_content
   $text
+  $input_container
   
   $container
 
@@ -32,12 +33,14 @@ export class modal {
     this.$text = $('<div/>').addClass('text').html(this.text);
     this.$modal_content.append(this.$text);
 
+    this.$input_container = $('<input/>').addClass("input-container").attr('id', 'input-container'+this.name).attr("type", "text").attr("autocomplete", "off");
     
+    this.$modal_content.append(this.$input_container);
 
     this.$buttons = $('<div/>').addClass('buttons');
     
     for (let i = 0; i < this.buttons.length; i++) {
-      let $button = $('<button/>').addClass('button').html(this.buttons[i]);
+      let $button = $('<button/>').addClass('button').html(this.buttons[i]).css("width", (60/this.buttons.length)+"%");
       $button.click(this.handlers[i]);
       this.$buttons.append($button);
     }
@@ -45,7 +48,7 @@ export class modal {
 
     this.$modal.append(this.$modal_content);
     $container.append(this.$modal);
-    
+    this.AddWindowEvent()
   }
 
   Open_(){
@@ -57,7 +60,50 @@ export class modal {
   }
 
   GetInputValue(){
-    return "victory";
+    this.input = this.$input_container.val();
+    this.$input_container.val("");
+    return this.input;
   }
 
+  AddWindowEvent(){
+    //closes the modal if clicked outside of the window
+    let modal_finder = "div#modal"+this.name;
+        document.addEventListener(
+            "click",
+            function(event) {
+                if (event.target.matches(modal_finder)) {
+                    $(modal_finder).css('display', 'none');
+                }
+            },
+            false
+        )
+  }
+
+  ApplyTheme(Themes){
+    console.log(Themes);
+
+    this.$modal_content.css(
+      "background-color",Themes['Toolbox Menu']['theme']['BackgroundColor']
+    ).css(
+        "color", Themes['Toolbox Menu Label']['theme']['FontColor']
+    )
+      
+    this.$buttons.children().css(
+      "color", Themes['Toolbox Menu Label']['theme']['FontColor']
+    ).css(
+      "background-color", Themes['Toolbox Menu']['theme']['BackgroundColor']
+    ).css(
+      "border-color", "rgba(255,255,255,0.1)"
+    ).hover(
+      function(){
+        $(this).css("background-color","rgba(255,255,255,0.2)");
+      },
+      function(){
+        $(this).css("background-color",Themes['Toolbox Menu']['theme']['BackgroundColor'])
+      }
+    )
+      
+  }
+
+  
 }

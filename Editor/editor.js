@@ -383,7 +383,7 @@ export class Editor {
     ApplyTheme() {
         this.ApplyCodeWorkspaceTheme(this.theme['Code Workspace']);
         this.toolbox.ApplyTheme(this.theme['Toolbox']);
-
+        this.toolbarModal.ApplyTheme(this.theme['Toolbox']);
         this.code.ForEachRec(elem => {
             elem.ApplyViewMode(this.viewMode);
         });
@@ -2246,7 +2246,7 @@ export class Editor {
 
     SetupModal_NewCategory(){
         this.toolbarModal = new modal("New_Category", 
-        "text",   
+        "Enter new category name",   
         ["cancel","ok"] , 
         [
             ()=>{
@@ -2255,12 +2255,16 @@ export class Editor {
             ()=>{
                 let text = this.toolbarModal.GetInputValue();
                 if(text == null || text == ""){
+                    //this.toolbarModal.Close_();
                     return;
                 }
                 this.toolbox.UpdateCategories({name: text, icon:"./Images/Toolbox/placeholder.svg", blocks:[]})
                 this.toolbarModal.Close_();
             }
+            
         ], 
         this.$toolbarModalContainer);
+
+        
     }
 }
