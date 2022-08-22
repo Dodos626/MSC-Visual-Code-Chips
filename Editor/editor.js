@@ -53,6 +53,9 @@ export class Editor {
     toolbarModal;
     $toolbarModalContainer;
 
+    toolbarModalDel;
+    ;
+
     language;
     code;
     clipboard;
@@ -248,6 +251,7 @@ export class Editor {
         this.SetWorkspace_DragAndDrop();
 
         this.SetupModal_NewCategory();
+        
         this.SetUpEditorToolbar_();
 
         
@@ -384,6 +388,7 @@ export class Editor {
         this.ApplyCodeWorkspaceTheme(this.theme['Code Workspace']);
         this.toolbox.ApplyTheme(this.theme['Toolbox']);
         this.toolbarModal.ApplyTheme(this.theme['Toolbox']);
+        
         this.code.ForEachRec(elem => {
             elem.ApplyViewMode(this.viewMode);
         });
@@ -505,6 +510,7 @@ export class Editor {
         this.$contextMenuContainer = $('<div/>').addClass('editor-context-menu-container');
 
         this.$toolbarModalContainer = $('<div/>').addClass('editor-toolbar-modal-container');
+        
 
         this.$toastMessages = $('<div/>').addClass('editor-toast-messages');
         this.$workspaceAndToolbox = $('<div/>').addClass('workspace-and-toolbox');
@@ -723,6 +729,17 @@ export class Editor {
                     shortcut:   'Ctrl+Q',
                     disabled:   () => this.viewMode !== EditorElementViewMode.BlockView,
                     handler:    () => this.EventHandler_NewCategory()
+                },
+            ],
+        ]);
+
+        this.editorToolbar.AddContextMenu('Delete', [
+            [
+                {
+                    name:       'Category',
+                    shortcut:   'Ctrl+Q+Del',
+                    disabled:   () => this.viewMode !== EditorElementViewMode.BlockView,
+                    handler:    () => this.EventHandler_DeleteCategory()
                 },
             ],
         ]);
@@ -2263,12 +2280,51 @@ export class Editor {
                     }
                     this.toolbox.UpdateCategories({name: text, icon:"./Images/Toolbox/placeholder.svg", blocks:[]})
                     this.toolbarModal.Close_();
-                    this.toolbox.DeleteCategory("Control");
+                    
                 }
                 
-            ], 
+            ],
+            ()=>{},
             this.$toolbarModalContainer
         );
         
+    }
+
+    EventHandler_DeleteCategory(){
+        this.SetupModal_DeleteCategory();
+        this.toolbarModalDel.ApplyTheme(this.theme['Toolbox']);
+        this.toolbarModalDel.Open_();
+        
+    }
+
+    SetupModal_DeleteCategory(){
+        let cat_names = [];
+        let cat_handlers = [];
+        
+        for (let category in this.toolbox.categories){
+            
+            cat_names.push(category);
+            cat_handlers.push(()=>{
+                this.toolbox.DeleteCategory(category);
+                this.toolbarModalDel.Close_();
+                delete this.toolbarModalDel;
+                $("#modalDelete_Category").remove();
+            });
+        }
+        console.log(cat_names);
+
+        this.toolbarModalDel = new modal(
+            "Delete_Category",
+            "Select category to delete",
+            false,
+            false,
+            cat_names,
+            cat_handlers,
+            ()=>{
+                delete this.toolbarModalDel;
+                $("#modalDelete_Category").remove();
+            },
+            this.$toolbarModalContainer
+        )
     }
 }

@@ -7,6 +7,7 @@ export class modal {
   has_input = false;
   open_on_render = false;
   input = "";
+  on_close;
 
   $modal
   $modal_content
@@ -22,15 +23,16 @@ export class modal {
    *  @param {boolean} open_on_render if the modal will pop up on render
    *  @param {string[]} buttons the buttons of the modal
    *  @param {function[]} handlers the handlers of the buttons
+   *  @param {function} on_close the function to run when the modal is closed
    */
-  constructor(name, text, input, open_on_render, buttons, handlers, $container) {
+  constructor(name, text, input, open_on_render, buttons, handlers, on_close, $container) {
     this.name = name;
     this.text = text;
     this.buttons = buttons;
     this.handlers = handlers;
     this.open_on_render = open_on_render;
     this.has_input = input;
-
+    this.on_close = on_close;
     this.$container = $container;
     this.Render($container);
   }
@@ -55,8 +57,14 @@ export class modal {
 
     this.$buttons = $('<div/>').addClass('buttons');
     
+
     for (let i = 0; i < this.buttons.length; i++) {
-      let $button = $('<button/>').addClass('button').html(this.buttons[i]).css("width", (60/this.buttons.length)+"%");
+      
+      if(i % 2 == 0){
+        this.$button_row = $('<div/>').addClass('button-row');
+      }
+
+      let $button = $('<button/>').addClass('button').html(this.buttons[i]).css("width", (60/(this.buttons.length == 1 ? 1 : 2))+"%");
       $button.click(this.handlers[i]);
       this.$buttons.append($button);
     }
@@ -76,6 +84,9 @@ export class modal {
 
   Close_(){
     $("div#modal"+this.name).css('display', 'none');
+    if(this.on_close != null){
+      this.on_close();
+    }
     if(!this.has_input) return;
     this.$input_container.val("");
   }
