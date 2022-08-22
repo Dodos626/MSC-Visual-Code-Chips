@@ -1,0 +1,5 @@
+KNOWN ISSUES:
+
+I/O creates issue when deleted, css selectors dont support /
+
+Input in new / category can be vulnerable to xss attack 
