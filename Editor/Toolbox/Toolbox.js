@@ -313,7 +313,6 @@ export class Toolbox {
      */
     constructor($container, categories, theme) {
         assert($container);
-        // TEO
         // categories.push({name:"My Blocks", icon:"", blocks:[]});
         this.id = 'toolbox' + Toolbox.currId++;
 
@@ -439,7 +438,7 @@ export class Toolbox {
         for (let categoryName in this.categories) {
             let category = this.categories[categoryName];
 
-            let $categoryContainer = $('<div/>').addClass('category-container');
+            let $categoryContainer = $('<div/>').addClass('category-container').attr("id", "category-" + categoryName);
             category.Render($categoryContainer);
 
             this.$toolboxMenu.append($categoryContainer);
@@ -503,9 +502,19 @@ export class Toolbox {
         console.log(this.categories);
     }
 
+    DeleteCategory(categoryName){
+        
+        delete this.categories[categoryName];
+        delete this.blocks[categoryName];
+        $('#category-' + categoryName).remove();
+        this.RenderAllBlocks();
+        this.ApplyTheme();
+        this.Select_(this.categories[Object.keys(this.categories)[0]]);
+    }
+
     RenderNewCategory(category,categoryName){
         this.RenderAllBlocks()
-        let $categoryContainer = $('<div/>').addClass('category-container');
+        let $categoryContainer = $('<div/>').addClass('category-container').attr("id", "category-" + categoryName);
         category.Render($categoryContainer);
 
         this.$toolboxMenu.append($categoryContainer);

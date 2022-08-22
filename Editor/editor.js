@@ -2245,26 +2245,30 @@ export class Editor {
     }
 
     SetupModal_NewCategory(){
-        this.toolbarModal = new modal("New_Category", 
-        "Enter new category name",   
-        ["cancel","ok"] , 
-        [
-            ()=>{
-            this.toolbarModal.Close_();
-            },
-            ()=>{
-                let text = this.toolbarModal.GetInputValue();
-                if(text == null || text == ""){
-                    //this.toolbarModal.Close_();
-                    return;
-                }
-                this.toolbox.UpdateCategories({name: text, icon:"./Images/Toolbox/placeholder.svg", blocks:[]})
+        this.toolbarModal = new modal(
+            "New_Category", 
+            "Enter new category name",
+            true,
+            false,   
+            ["cancel","ok"] , 
+            [
+                ()=>{
                 this.toolbarModal.Close_();
-            }
-            
-        ], 
-        this.$toolbarModalContainer);
-
+                },
+                ()=>{
+                    let text = this.toolbarModal.GetInputValue();
+                    if(text == null || text == ""){
+                        //this.toolbarModal.Close_();
+                        return;
+                    }
+                    this.toolbox.UpdateCategories({name: text, icon:"./Images/Toolbox/placeholder.svg", blocks:[]})
+                    this.toolbarModal.Close_();
+                    this.toolbox.DeleteCategory("Control");
+                }
+                
+            ], 
+            this.$toolbarModalContainer
+        );
         
     }
 }

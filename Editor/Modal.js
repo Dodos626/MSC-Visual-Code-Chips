@@ -3,6 +3,9 @@ export class modal {
   text;
   buttons = [];
   handlers = [];
+
+  has_input = false;
+  open_on_render = false;
   input = "";
 
   $modal
@@ -12,12 +15,22 @@ export class modal {
   
   $container
 
-  constructor(name, text, buttons, handlers, $container) {
+  /** 
+   *  @param {string} name the name of the modal
+   *  @param {string} text the text of the modal
+   *  @param {boolean} input if the modal has a text input field
+   *  @param {boolean} open_on_render if the modal will pop up on render
+   *  @param {string[]} buttons the buttons of the modal
+   *  @param {function[]} handlers the handlers of the buttons
+   */
+  constructor(name, text, input, open_on_render, buttons, handlers, $container) {
     this.name = name;
     this.text = text;
     this.buttons = buttons;
     this.handlers = handlers;
-    
+    this.open_on_render = open_on_render;
+    this.has_input = input;
+
     this.$container = $container;
     this.Render($container);
   }
@@ -33,9 +46,12 @@ export class modal {
     this.$text = $('<div/>').addClass('text').html(this.text);
     this.$modal_content.append(this.$text);
 
-    this.$input_container = $('<input/>').addClass("input-container").attr('id', 'input-container'+this.name).attr("type", "text").attr("autocomplete", "off");
+    if(this.has_input){
+      this.$input_container = $('<input/>').addClass("input-container").attr('id', 'input-container'+this.name).attr("type", "text").attr("autocomplete", "off");
     
-    this.$modal_content.append(this.$input_container);
+      this.$modal_content.append(this.$input_container);
+    }
+    
 
     this.$buttons = $('<div/>').addClass('buttons');
     
@@ -49,6 +65,9 @@ export class modal {
     this.$modal.append(this.$modal_content);
     $container.append(this.$modal);
     this.AddWindowEvent()
+    if(this.open_on_render){
+      this.Open_();
+    }
   }
 
   Open_(){
@@ -57,9 +76,12 @@ export class modal {
 
   Close_(){
     $("div#modal"+this.name).css('display', 'none');
+    if(!this.has_input) return;
+    this.$input_container.val("");
   }
 
   GetInputValue(){
+    if(!this.has_input) return null;
     this.input = this.$input_container.val();
     this.$input_container.val("");
     return this.input;
@@ -73,6 +95,7 @@ export class modal {
             function(event) {
                 if (event.target.matches(modal_finder)) {
                     $(modal_finder).css('display', 'none');
+                    
                 }
             },
             false
@@ -80,7 +103,7 @@ export class modal {
   }
 
   ApplyTheme(Themes){
-    console.log(Themes);
+    //console.log(Themes);
 
     this.$modal_content.css(
       "background-color",Themes['Toolbox Menu']['theme']['BackgroundColor']
