@@ -101,12 +101,12 @@ export class modal {
   AddWindowEvent(){
     //closes the modal if clicked outside of the window
     let modal_finder = "div#modal"+this.name;
+    let self = this;
         document.addEventListener(
             "click",
             function(event) {
                 if (event.target.matches(modal_finder)) {
-                    $(modal_finder).css('display', 'none');
-                    
+                    self.Close_();
                 }
             },
             false

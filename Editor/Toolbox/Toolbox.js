@@ -506,7 +506,8 @@ export class Toolbox {
         
         delete this.categories[categoryName];
         delete this.blocks[categoryName];
-        $('#category-' + categoryName).remove();
+        $("[id= 'category-"+categoryName+"']").remove();
+        
         this.RenderAllBlocks();
         this.ApplyTheme();
         this.Select_(this.categories[Object.keys(this.categories)[0]]);
