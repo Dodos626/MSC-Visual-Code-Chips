@@ -2293,33 +2293,33 @@ export class Editor {
     EventHandler_DeleteCategory(){
         this.SetupModal_DeleteCategory();
         this.toolbarModalDel.ApplyTheme(this.theme['Toolbox']);
-        this.toolbarModalDel.Open_();
+        
         
     }
 
     SetupModal_DeleteCategory(){
-        let cat_names = [];
-        let cat_handlers = [];
+        let categoryNames = [];
+        let categoryHandlers = [];
         
         for (let category in this.toolbox.categories){
             
-            cat_names.push(category);
-            cat_handlers.push(()=>{
+            categoryNames.push(category);
+            categoryHandlers.push(()=>{
                 this.toolbox.DeleteCategory(category);
                 this.toolbarModalDel.Close_();
                 delete this.toolbarModalDel;
                 $("#modalDelete_Category").remove();
             });
         }
-        console.log(cat_names);
+        console.log(categoryNames);
 
         this.toolbarModalDel = new modal(
             "Delete_Category",
             "Select category to delete",
             false,
-            false,
-            cat_names,
-            cat_handlers,
+            true,
+            categoryNames,
+            categoryHandlers,
             ()=>{
                 delete this.toolbarModalDel;
                 $("#modalDelete_Category").remove();

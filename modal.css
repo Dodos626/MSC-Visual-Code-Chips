@@ -69,6 +69,11 @@
 
 }
 
+.modal-content button:hover,
+.modal-content button:focus {
+  cursor: pointer;
+}
+
 .modal-content button{
   transition-duration: 0.4s;
   border: 1px solid;

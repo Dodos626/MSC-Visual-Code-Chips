@@ -542,6 +542,7 @@ export class Toolbox {
                 )
             }
         });
+        this.Select_(this.categories[Object.keys(this.categories)[0]]);
     }
 
     Render() {
