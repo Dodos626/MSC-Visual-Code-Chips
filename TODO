@@ -1,11 +1,5 @@
 KNOWN ISSUES:
 
-Input in new / category can be vulnerable to xss attack 
+dc : Input in new / category can be vulnerable to xss attack 
 
 
-FIXED ISSUES:
-
-
-Del Modal if clicked outside of window it closes but doesnt delete self
-
-I/O creates issue when deleted, css selectors dont support / and blank space

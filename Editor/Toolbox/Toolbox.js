@@ -24,6 +24,8 @@ export class Toolbox {
 
     autoScrolling = false;
 
+    newCategoryButtonHandler;
+
     onDragStart = (e, block) => {};
     onDragEnd = (e, block) => {};
     onDrop = (e, block) => {};
@@ -384,7 +386,7 @@ export class Toolbox {
         this.$toolboxBlocks = $('<div/>').addClass('toolbox-blocks');
         this.$toolboxBlocksContainer = $('<div/>');
         this.$toolboxBlocksContainer.append(this.$toolboxBlocks);
-
+        
         this.$toolbox.append(this.$toolboxMenu);
         this.$toolbox.append(this.$toolboxBlocksContainer);
         this.$container.append(this.$toolbox);
@@ -438,7 +440,7 @@ export class Toolbox {
         for (let categoryName in this.categories) {
             let category = this.categories[categoryName];
 
-            let $categoryContainer = $('<div/>').addClass('category-container').attr("id", "category-" + categoryName);
+            let $categoryContainer = $('<div/>').addClass('category-container');
             category.Render($categoryContainer);
 
             this.$toolboxMenu.append($categoryContainer);
@@ -466,6 +468,8 @@ export class Toolbox {
                 }
             });
         }
+        this.$toolboxMenu.append($('<div/>').addClass('category-container').append($('<button/>').html("+").attr("id","newCategoryButton")))
+        this.SetNewCategoryHandler_();
     }
 
     RenderAllBlocks(){
@@ -497,51 +501,19 @@ export class Toolbox {
         });
 
         // renders the new category
-        this.RenderNewCategory(this.categories[category.name],category.name);
+        this.$toolboxMenu.empty();
+        this.Render();
         this.ApplyTheme();
-        console.log(this.categories);
+        this.Select_(this.categories[Object.keys(this.categories)[0]]);
     }
 
     DeleteCategory(categoryName){
         
         delete this.categories[categoryName];
         delete this.blocks[categoryName];
-        $("[id= 'category-"+categoryName+"']").remove();
-        
-        this.RenderAllBlocks();
+        this.$toolboxMenu.empty();
+        this.Render();
         this.ApplyTheme();
-        this.Select_(this.categories[Object.keys(this.categories)[0]]);
-    }
-
-    RenderNewCategory(category,categoryName){
-        this.RenderAllBlocks()
-        let $categoryContainer = $('<div/>').addClass('category-container').attr("id", "category-" + categoryName);
-        category.Render($categoryContainer);
-
-        this.$toolboxMenu.append($categoryContainer);
-        
-        category.GetView().on('click', () => {
-            if (this.selected === category){
-                this.Select_(undefined);
-                this.$toolboxBlocksContainer.hide();
-            }else{
-                this.$toolboxBlocksContainer.show();
-                this.Select_(category);
-                this.autoScrolling = true;
-                this.$toolboxBlocks.animate(
-                    {
-                        scrollTop: this.$scrollTargets[categoryName].offset().top 
-                                    + this.$toolboxBlocks.scrollTop() 
-                                    - this.$toolboxBlocks.offset().top
-                                    - 20
-                    }, 
-                    400, 
-                    () => {
-                        this.autoScrolling = false;
-                    }
-                )
-            }
-        });
         this.Select_(this.categories[Object.keys(this.categories)[0]]);
     }
 
@@ -779,6 +751,15 @@ export class Toolbox {
         e.preventDefault();
         
         this.history.Redo();
+    }
+
+    SetNewCategoryHandler(f){
+        this.newCategoryButtonHandler = f;
+        this.SetNewCategoryHandler_();
+    }
+
+    SetNewCategoryHandler_(){
+        $("[id='newCategoryButton']").click(this.newCategoryButtonHandler);
     }
 
 }
