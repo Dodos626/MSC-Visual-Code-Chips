@@ -724,10 +724,10 @@ export class Editor {
             ],
         ]);
         
-        this.editorToolbar.AddContextMenu('New', [
+        this.editorToolbar.AddContextMenu('Snippets', [
             [
                 {
-                    name:       'Category',
+                    name:       'New',
                     shortcut:   'Ctrl+P',
                     disabled:   () => this.viewMode !== EditorElementViewMode.BlockView,
                     handler:    () => this.EventHandler_NewCategory()
@@ -735,16 +735,7 @@ export class Editor {
             ],
         ]);
 
-        this.editorToolbar.AddContextMenu('Delete', [
-            [
-                {
-                    name:       'Category',
-                    shortcut:   'Ctrl+P+Del',
-                    disabled:   () => this.viewMode !== EditorElementViewMode.BlockView,
-                    handler:    () => this.EventHandler_DeleteCategory()
-                },
-            ],
-        ]);
+        
 
         this.editorToolbar.AddButtonCategory([
             {

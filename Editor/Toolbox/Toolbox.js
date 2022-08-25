@@ -269,7 +269,7 @@ export class Toolbox {
             ApplyTheme: (theme) => {
                 ApplyCssToStyle(
                     `${this.id}-scrollbar`,
-                    [`#${this.id} .toolbox-blocks::-webkit-scrollbar`],
+                    [`#${this.id} *::-webkit-scrollbar`],
                     [theme.ToCss()]
                 )
             },
@@ -279,7 +279,7 @@ export class Toolbox {
             ApplyTheme: (theme) => {
                 ApplyCssToStyle(
                     `${this.id}-scrollbar-thumb`,
-                    [`#${this.id} .toolbox-blocks::-webkit-scrollbar-thumb`],
+                    [`#${this.id} *::-webkit-scrollbar-thumb`],
                     [theme.ToCss()]
                 )
             },
@@ -289,7 +289,7 @@ export class Toolbox {
             ApplyTheme: (theme) => {
                 ApplyCssToStyle(
                     `${this.id}-scrollbar-thumb-hover`,
-                    [`#${this.id} .toolbox-blocks::-webkit-scrollbar-thumb:hover`],
+                    [`#${this.id} *::-webkit-scrollbar-thumb:hover`],
                     [theme.ToCss()]
                 )
             },
@@ -299,7 +299,7 @@ export class Toolbox {
             ApplyTheme: (theme) => {
                 ApplyCssToStyle(
                     `${this.id}-scrollbar-track`,
-                    [`#${this.id} .toolbox-blocks::-webkit-scrollbar-track`],
+                    [`#${this.id} *::-webkit-scrollbar-track`],
                     [theme.ToCss()]
                 )
             },
