@@ -587,7 +587,7 @@ export class Editor {
             .AddEventHandler( [Keys.CTRL, Keys.Y],                  EvHandler(() => this.EventHandler_Redo_()) )
             .AddEventHandler( [Keys.CTRL, Keys.B],                  EvHandler(() => this.EventHandler_Beautify()) )
             .AddEventHandler( [Keys.CTRL, Keys.Q],                  EvHandler(() => this.EventHandler_Execute()) )
-            .AddEventHandler( [Keys.CTRL, Keys.P, Keys.DELETE],     EvHandler(() => this.EventHandler_DeleteCategory()))
+            
             .AddEventHandler( [Keys.CTRL, Keys.P],                  EvHandler(() => this.EventHandler_NewCategory()))
         ;
     }
@@ -820,7 +820,7 @@ export class Editor {
             return 0.2 * this.$container.width();
         });
         
-        this.toolbox.SetNewCategoryHandler(()=>{this.EventHandler_NewCategory()});
+        
 
         this.toolbox.RenderAllBlocks();
     }
@@ -2285,41 +2285,5 @@ export class Editor {
         
     }
 
-    EventHandler_DeleteCategory(){
-        this.SetupModal_DeleteCategory();
-        this.toolbarModalDel.ApplyTheme(this.theme['Toolbox']);
-        
-        
-    }
-
-    SetupModal_DeleteCategory(){
-        let categoryNames = [];
-        let categoryHandlers = [];
-        
-        for (let category in this.toolbox.categories){
-            
-            categoryNames.push(category);
-            categoryHandlers.push(()=>{
-                this.toolbox.DeleteCategory(category);
-                this.toolbarModalDel.Close_();
-                delete this.toolbarModalDel;
-                $("#modalDelete_Category").remove();
-            });
-        }
-        console.log(categoryNames);
-
-        this.toolbarModalDel = new modal(
-            "Delete_Category",
-            "Select category to delete",
-            false,
-            true,
-            categoryNames,
-            categoryHandlers,
-            ()=>{
-                delete this.toolbarModalDel;
-                $("#modalDelete_Category").remove();
-            },
-            this.$toolbarModalContainer
-        )
-    }
+    
 }

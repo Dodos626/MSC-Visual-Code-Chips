@@ -24,7 +24,7 @@ export class Toolbox {
 
     autoScrolling = false;
 
-    newCategoryButtonHandler;
+    
 
     onDragStart = (e, block) => {};
     onDragEnd = (e, block) => {};
@@ -344,6 +344,9 @@ export class Toolbox {
         
         this.Render();
         this.Select_(this.categories[categories[0].name]);
+        console.log(categories);
+        console.log(this.categories)
+        console.log(this.blocks)
     }
     
     static FromJson($container, toolboxJson){
@@ -468,8 +471,7 @@ export class Toolbox {
                 }
             });
         }
-        this.$toolboxMenu.append($('<div/>').addClass('category-container').append($('<button/>').html("+").attr("id","newCategoryButton")))
-        this.SetNewCategoryHandler_();
+        
     }
 
     RenderAllBlocks(){
@@ -753,13 +755,8 @@ export class Toolbox {
         this.history.Redo();
     }
 
-    SetNewCategoryHandler(f){
-        this.newCategoryButtonHandler = f;
-        this.SetNewCategoryHandler_();
-    }
+    
 
-    SetNewCategoryHandler_(){
-        $("[id='newCategoryButton']").click(this.newCategoryButtonHandler);
-    }
+    
 
 }
