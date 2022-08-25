@@ -11,7 +11,7 @@ import { MoveCommand } from "./ToolboxCommands/MoveCommand.js";
 import { ApplyCssToStyle, Themeable, ThemeableProps } from "../Theme.js";
 
 export class Toolbox {
-    categories = {};
+    categories = [];
     blocks = {};
     $scrollTargets = {};
 
@@ -318,14 +318,25 @@ export class Toolbox {
         // categories.push({name:"My Blocks", icon:"", blocks:[]});
         this.id = 'toolbox' + Toolbox.currId++;
 
-        for (let category of categories){
-            this.categories[category.name] = (new MenuCategory(category.name, category.icon, '#A5A5A5'));
-            this.blocks[category.name] = category.blocks.map(blockJson => {
+
+        for(let i=0; i < categories.length ; i++){
+            this.categories[i] = (new MenuCategory(categories[i].name,categories[i].icon, '#A5A5A5'));
+            this.blocks[i] = categories[i].blocks.map(blockJson => {
                 let b = EditorElementParser.FromJson( blockJson, block => this.BindElem(block) );
-                this.SetBlockDragEvents(category.name, b);
+                this.SetBlockDragEvents(categories[i].name, b);
                 return b;
-            });
+            })
+            
         }
+
+        // for (let category of categories){
+        //     this.categories[category.name] = (new MenuCategory(category.name, category.icon, '#A5A5A5'));
+        //     this.blocks[category.name] = category.blocks.map(blockJson => {
+        //         let b = EditorElementParser.FromJson( blockJson, block => this.BindElem(block) );
+        //         this.SetBlockDragEvents(category.name, b);
+        //         return b;
+        //     });
+        // }
 
         this.$container = $container;
         
@@ -343,7 +354,7 @@ export class Toolbox {
         this.SetUpKeyboardEvents_();
         
         this.Render();
-        this.Select_(this.categories[categories[0].name]);
+        this.Select_(this.categories[0]);
         console.log(categories);
         console.log(this.categories)
         console.log(this.blocks)
@@ -370,14 +381,24 @@ export class Toolbox {
     ToJson(){
         let toolboxJson = [];
 
-        for (let categoryName in this.categories)
+        for (let i=0; i < this.categories.length ; i++){
             toolboxJson.push(
                 {
-                    name:   categoryName,
-                    icon:   this.categories[categoryName].GetIcon(),
-                    blocks: this.blocks[categoryName].map(block => block.ToJsonRec())
+                    name: this.categories[i].text,
+                    icon: this.categories[i].GetIcon(),
+                    blocks: this.categories[i].map(block=> block.ToJsonRec())
                 }
             );
+        }
+
+        // for (let categoryName in this.categories)
+        //     toolboxJson.push(
+        //         {
+        //             name:   categoryName,
+        //             icon:   this.categories[categoryName].GetIcon(),
+        //             blocks: this.blocks[categoryName].map(block => block.ToJsonRec())
+        //         }
+        //     );
 
         return toolboxJson;
     }
@@ -440,8 +461,9 @@ export class Toolbox {
     }
 
     RenderToolboxMenu(){
-        for (let categoryName in this.categories) {
-            let category = this.categories[categoryName];
+        for (let categoryIndex in this.categories) {
+            
+            let category = this.categories[categoryIndex];
 
             let $categoryContainer = $('<div/>').addClass('category-container');
             category.Render($categoryContainer);
@@ -458,7 +480,7 @@ export class Toolbox {
                     this.autoScrolling = true;
                     this.$toolboxBlocks.animate(
                         {
-                            scrollTop: this.$scrollTargets[categoryName].offset().top 
+                            scrollTop: this.$scrollTargets[categoryIndex].offset().top 
                                         + this.$toolboxBlocks.scrollTop() 
                                         - this.$toolboxBlocks.offset().top
                                         - 20
@@ -493,10 +515,11 @@ export class Toolbox {
     // NEW CODE
     UpdateCategories(category){
         // creates the menu category and puts it in the categories
-        this.categories[category.name] = (new MenuCategory(category.name, category.icon, '#A5A5A5'));
-
+        
+        this.categories.push((new MenuCategory(category.name, category.icon, '#A5A5A5')))  
+        let last_index = this.categories.length - 1 ;
         // maps the blocks and renders them
-        this.blocks[category.name] = category.blocks.map(blockJson => {
+        this.blocks[last_index] = category.blocks.map(blockJson => {
             let b = EditorElementParser.FromJson( blockJson, block => this.BindElem(block) );
             this.SetBlockDragEvents(category.name, b);
             return b;
@@ -506,17 +529,27 @@ export class Toolbox {
         this.$toolboxMenu.empty();
         this.Render();
         this.ApplyTheme();
-        this.Select_(this.categories[Object.keys(this.categories)[0]]);
+        this.Select_(this.categories[0]);
     }
 
     DeleteCategory(categoryName){
-        
-        delete this.categories[categoryName];
-        delete this.blocks[categoryName];
+        let index = this.FindIndexCategory(categoryName);
+        assert(index == -1, "didnt found category for deletion");
+        delete this.categories[index];
+        delete this.blocks[index];
         this.$toolboxMenu.empty();
         this.Render();
         this.ApplyTheme();
-        this.Select_(this.categories[Object.keys(this.categories)[0]]);
+        this.Select_(this.categories[0]);
+    }
+
+    FindIndexCategory(categoryName){
+        for(var i in this.categories){
+            if(this.categories[i].name == categoryName){
+                return i;
+            }
+        }
+        return -1;
     }
 
     Render() {
@@ -557,7 +590,7 @@ export class Toolbox {
 
     RenderCategoryBlocks_(categoryName){
         let $wholeCategory = $('<div/>').addClass('category');
-        let $scrollTarget = $('<div/>').html(categoryName).addClass('category-name');
+        let $scrollTarget = $('<div/>').html(this.categories[categoryName].text).addClass('category-name');
         let $categoryBlocks = $('<div/>').addClass('category-blocks');
                     
         let blocks = this.blocks[categoryName];
