@@ -36,6 +36,8 @@ import { AstHost } from '../Generators/AstHost.js';
 import { ToJavascriptVisitor } from '../Generators/ToJavascriptVisitor.js';
 import { EditorToolbar } from './EditorToolbar.js';
 import { QuickReplaceCommand } from './EditorCommands/QuickReplaceCommand.js';
+import { NewCategoryCommand } from './Toolbox/ToolboxCommands/NewCategoryCommand.js'
+import { DeleteCategoryCommand } from './Toolbox/ToolboxCommands/DeleteCategoryCommand.js'
 import { modal } from './Modal.js';
 
 export class Editor {
@@ -814,7 +816,8 @@ export class Editor {
             this.$toolboxspace, 
             toolboxInfo,
             this.theme['Context Menu'],
-            {newCategory : () => this.EventHandler_NewCategory()}
+            {newCategory : () => this.EventHandler_NewCategory(),
+            deleteCategory : (a) => this.EventHandler_DeleteCategory(a)}
             );
         this.toolbox.SetToolbox_MaxWidth(() => {
             return 0.8 * this.$container.width();
@@ -2260,6 +2263,13 @@ export class Editor {
         this.toolbarModal.Open_();
     }
 
+    EventHandler_DeleteCategory(category){
+        this.commands.ExecuteAndAppend(new DeleteCategoryCommand(
+            this.toolbox,
+            category
+        ))
+    }
+
     SetupModal_NewCategory(){
         this.toolbarModal = new modal(
             "New_Category", 
@@ -2277,7 +2287,11 @@ export class Editor {
                         //this.toolbarModal.Close_();
                         return;
                     }
-                    this.toolbox.UpdateCategories({name: text, icon:"./Images/Toolbox/placeholder.svg", blocks:[]})
+                    this.commands.ExecuteAndAppend(new NewCategoryCommand (
+                            this.toolbox,
+                            {name: text, icon:"./Images/Toolbox/placeholder.svg", blocks:[]}
+                            ))
+                    
                     this.toolbarModal.Close_();
                     
                 }

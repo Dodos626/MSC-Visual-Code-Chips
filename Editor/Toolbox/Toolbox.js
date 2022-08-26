@@ -367,9 +367,9 @@ export class Toolbox {
         this.Render();
         this.CloseContextMenu();
         this.Select_(this.categories[0]);
-        console.log(categories);
-        console.log(this.categories)
-        console.log(this.blocks)
+        // console.log(categories);
+        // console.log(this.categories)
+        // console.log(this.blocks)
     }
     
     static FromJson($container, toolboxJson){
@@ -527,6 +527,7 @@ export class Toolbox {
 
     // NEW CODE
     UpdateCategories(category){
+        
         // creates the menu category and puts it in the categories
         
         this.categories.push((new MenuCategory(category.name, category.icon, '#A5A5A5')))  
@@ -544,13 +545,43 @@ export class Toolbox {
         this.Render();
         this.ApplyTheme();
         this.Select_(this.categories[0]);
+        console.log(this.categories)
+    }
+
+    AddCategoryAtIndex(category, index){
+        console.log(this.categories)
+        if(index >= this.categories.length ){
+            this.UpdateCategories(category);
+            return;
+        }
+        this.categories.splice(index, 0,  new MenuCategory(category.name, category.icon, '#A5A5A5'));
+        this.categories[index].canRemove = true;
+
+        for (let i = this.categories.length-1 ; i > index ; i--){
+            this.blocks[i] = this.blocks[i-1];
+        }
+        
+        this.blocks[index] = category.blocks.map(blockJson => {
+            let b = EditorElementParser.FromJson( blockJson, block => this.BindElem(block) );
+            this.SetBlockDragEvents(category.name, b);
+            return b;
+        });
+
+        this.$toolboxMenu.empty();
+        this.Render();
+        this.ApplyTheme();
+        this.Select_(this.categories[0]);
+        
     }
 
     DeleteCategory(categoryName){
         let index = this.FindIndexCategory(categoryName);
         assert(index != -1, "didnt found category for deletion");
-        delete this.categories[index];
-        delete this.blocks[index];
+        for(let i = this.categories.length-1; i >= index ; i--){
+            this.blocks[i] = this.blocks[i-1]
+        }
+        delete this.blocks[this.categories.length-1];
+        this.categories.splice(index,1)
         this.$toolboxMenu.empty();
         this.Render();
         this.ApplyTheme();
@@ -805,7 +836,7 @@ export class Toolbox {
             e.preventDefault();
             // NA ALLAKSW TO PWS PIANW TO TEXT
             var text = e.currentTarget.children[0].lastChild.innerText;
-            let index = this.FindIndexCategory(text)
+            var index = this.FindIndexCategory(text)
             
             this.categories[index].GetView().click()
             
@@ -824,7 +855,7 @@ export class Toolbox {
                             name: 'Delete',
                             shortcut:   'Ctrl+P+Del',
                             disabled: !this.categories[index].canRemove,
-                            handler: () => {this.DeleteCategory(text)}
+                            handler: () => {this.ContextMenuHandlers['deleteCategory'](this.categories[index])}
                         }
                     ],
                     
