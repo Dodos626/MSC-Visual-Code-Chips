@@ -806,8 +806,9 @@ export class Toolbox {
             // NA ALLAKSW TO PWS PIANW TO TEXT
             var text = e.currentTarget.children[0].lastChild.innerText;
             let index = this.FindIndexCategory(text)
-            this.Select_(this.categories[index])
-            console.log(e , text, index)
+            
+            this.categories[index].GetView().click()
+            
             this.$contextMenuContainer.empty();
             
             let contextMenu = new ContextMenu(
@@ -836,12 +837,7 @@ export class Toolbox {
     }
 
     FitContextMenu_(e){
-        console.log(e.currentTarget.getBoundingClientRect(), );
-        
-        
         const position = e.currentTarget.getBoundingClientRect();
-        
-        
         let top = position.top > this.$toolbox.height() ? this.$toolbox.height() : position.top
         let left = this.$toolboxMenu.width() + position.right/2 + 10
         this.$contextMenuContainer.css('left', left);

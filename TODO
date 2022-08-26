@@ -5,9 +5,9 @@ to delete me context menu sta categories
     na min exei prompt gia are you sure kathws tha mpainei sto
     undo / redo history
 
-to new sto toolboxmenu na ginei snippets
 
-na min diagrafontai ta built in category
+
+
 flag canRemove = false by default or flag is absent
 sta user defined  blocks = true 
 
@@ -20,10 +20,17 @@ na mporw me undo redo na akirwsw ksanakanw delete
     tha apothikeuw to category kai to block
 
 
-CATEGORY KAI BLOCKS mesa sto toolbox na ginun pinakes
+
 
 KNOWN ISSUES:
 
 dc : Input in new / category can be vulnerable to xss attack 
 
 
+DONE:
+
+to new sto toolboxmenu na ginei snippets
+
+na min diagrafontai ta built in category
+
+CATEGORY KAI BLOCKS mesa sto toolbox na ginun pinakes
