@@ -9,11 +9,15 @@ import { DeleteCommand } from "./ToolboxCommands/DeleteCommand.js";
 import { InsertCommand } from "./ToolboxCommands/InsertCommand.js";
 import { MoveCommand } from "./ToolboxCommands/MoveCommand.js";
 import { ApplyCssToStyle, Themeable, ThemeableProps } from "../Theme.js";
+import { ContextMenu } from "../ContextMenu.js";
 
 export class Toolbox {
     categories = [];
     blocks = {};
     $scrollTargets = {};
+
+    ContextMenuTheme;
+    ContextMenuHandlers = [];
 
     selected;
 
@@ -24,7 +28,7 @@ export class Toolbox {
 
     autoScrolling = false;
 
-    
+    $contextMenuContainer;
 
     onDragStart = (e, block) => {};
     onDragEnd = (e, block) => {};
@@ -313,14 +317,20 @@ export class Toolbox {
      * 
      * @param {[{name: string, icon: string, blocks: [EditorElement]}]} categories 
      */
-    constructor($container, categories, theme) {
+    constructor($container, categories,  ContextMenuTheme,
+        ContextMenuHandlers, theme) {
         assert($container);
+        
+        this.ContextMenuHandlers = ContextMenuHandlers;
+        this.ContextMenuTheme = ContextMenuTheme;
+        
         // categories.push({name:"My Blocks", icon:"", blocks:[]});
         this.id = 'toolbox' + Toolbox.currId++;
 
 
         for(let i=0; i < categories.length ; i++){
             this.categories[i] = (new MenuCategory(categories[i].name,categories[i].icon, '#A5A5A5'));
+            this.categories[i].canRemove = false;
             this.blocks[i] = categories[i].blocks.map(blockJson => {
                 let b = EditorElementParser.FromJson( blockJson, block => this.BindElem(block) );
                 this.SetBlockDragEvents(categories[i].name, b);
@@ -341,6 +351,7 @@ export class Toolbox {
         this.$container = $container;
         
         this.theme = theme;
+        
         this.SetElem_Theme((elem) => {
             if (elem.GetType() === EditorElementTypes.NewLine || elem.GetType() === EditorElementTypes.Tab){
                 return {};
@@ -354,6 +365,7 @@ export class Toolbox {
         this.SetUpKeyboardEvents_();
         
         this.Render();
+        this.CloseContextMenu();
         this.Select_(this.categories[0]);
         console.log(categories);
         console.log(this.categories)
@@ -410,11 +422,12 @@ export class Toolbox {
         this.$toolboxBlocks = $('<div/>').addClass('toolbox-blocks');
         this.$toolboxBlocksContainer = $('<div/>');
         this.$toolboxBlocksContainer.append(this.$toolboxBlocks);
+        this.$contextMenuContainer = $('<div/>').addClass('editor-context-menu-container')
         
         this.$toolbox.append(this.$toolboxMenu);
-        this.$toolbox.append(this.$toolboxBlocksContainer);
+        this.$toolbox.append(this.$toolboxBlocksContainer, this.$contextMenuContainer);
         this.$container.append(this.$toolbox);
-
+        
         this.MakeBlockContainerResizable_();
         this.SetupMenuSelectionOnScroll();
     }
@@ -518,6 +531,7 @@ export class Toolbox {
         
         this.categories.push((new MenuCategory(category.name, category.icon, '#A5A5A5')))  
         let last_index = this.categories.length - 1 ;
+        this.categories[last_index].canRemove = true;
         // maps the blocks and renders them
         this.blocks[last_index] = category.blocks.map(blockJson => {
             let b = EditorElementParser.FromJson( blockJson, block => this.BindElem(block) );
@@ -534,7 +548,7 @@ export class Toolbox {
 
     DeleteCategory(categoryName){
         let index = this.FindIndexCategory(categoryName);
-        assert(index == -1, "didnt found category for deletion");
+        assert(index != -1, "didnt found category for deletion");
         delete this.categories[index];
         delete this.blocks[index];
         this.$toolboxMenu.empty();
@@ -544,17 +558,13 @@ export class Toolbox {
     }
 
     FindIndexCategory(categoryName){
-        for(var i in this.categories){
-            if(this.categories[i].name == categoryName){
-                return i;
-            }
-        }
-        return -1;
+        return this.categories.map((obj) =>{return obj.text }).indexOf(categoryName);
     }
 
     Render() {
         this.RenderToolboxMenu();
         this.RenderAllBlocks();
+        this.SetupContextMenu();
     }
 
     RenderBlock(block, $category, categoryName){
@@ -788,8 +798,68 @@ export class Toolbox {
         this.history.Redo();
     }
 
-    
+    SetupContextMenu(){
+        
+        this.$toolboxMenu.children('.category-container').on('contextmenu', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            // NA ALLAKSW TO PWS PIANW TO TEXT
+            var text = e.currentTarget.children[0].lastChild.innerText;
+            let index = this.FindIndexCategory(text)
+            this.Select_(this.categories[index])
+            console.log(e , text, index)
+            this.$contextMenuContainer.empty();
+            
+            let contextMenu = new ContextMenu(
+                this.$contextMenuContainer,[
+                    [
+                        {
+                            name: "New",
+                            shortcut: 'Ctrl+P',
+                            disabled: false,
+                            handler: this.ContextMenuHandlers['newCategory']
+                        },
+                        {
+                            name: 'Delete',
+                            shortcut:   'Ctrl+P+Del',
+                            disabled: !this.categories[index].canRemove,
+                            handler: () => {this.DeleteCategory(text)}
+                        }
+                    ],
+                    
+                ]
+            )
+            contextMenu.Render();
+            contextMenu.ApplyTheme(this.ContextMenuTheme)
+            this.FitContextMenu_(e);
+        });
+    }
+
+    FitContextMenu_(e){
+        console.log(e.currentTarget.getBoundingClientRect(), );
+        
+        
+        const position = e.currentTarget.getBoundingClientRect();
+        
+        
+        let top = position.top > this.$toolbox.height() ? this.$toolbox.height() : position.top
+        let left = this.$toolboxMenu.width() + position.right/2 + 10
+        this.$contextMenuContainer.css('left', left);
+        this.$contextMenuContainer.css('top', top);
+    }
+
+    CloseContextMenu(){
+        var f = () => this.$contextMenuContainer.empty();
+        document.addEventListener(
+            "click",
+            function(event) {
+                f()
+            },
+            false
+        )
+    }
 
     
+
 
 }

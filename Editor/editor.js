@@ -53,9 +53,6 @@ export class Editor {
     toolbarModal;
     $toolbarModalContainer;
 
-    toolbarModalDel;
-    ;
-
     language;
     code;
     clipboard;
@@ -247,7 +244,8 @@ export class Editor {
         this.SetUpContextMenu_();
         
         this.SetUpToolbox_(toolboxInfo);
-
+        
+        
         this.SetWorkspace_DragAndDrop();
 
         this.SetupModal_NewCategory();
@@ -812,7 +810,12 @@ export class Editor {
 
     SetUpToolbox_(toolboxInfo){
         
-        this.toolbox = new Toolbox(this.$toolboxspace, toolboxInfo);
+        this.toolbox = new Toolbox(
+            this.$toolboxspace, 
+            toolboxInfo,
+            this.theme['Context Menu'],
+            {newCategory : () => this.EventHandler_NewCategory()}
+            );
         this.toolbox.SetToolbox_MaxWidth(() => {
             return 0.8 * this.$container.width();
         });
@@ -888,6 +891,7 @@ export class Editor {
 
             this.FitContextMenu_(e);
         });
+
     }
 
     FitContextMenu_(e){
@@ -2284,6 +2288,8 @@ export class Editor {
         );
         
     }
+
+    
 
     
 }
