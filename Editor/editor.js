@@ -38,6 +38,7 @@ import { EditorToolbar } from './EditorToolbar.js';
 import { QuickReplaceCommand } from './EditorCommands/QuickReplaceCommand.js';
 import { NewCategoryCommand } from './Toolbox/ToolboxCommands/NewCategoryCommand.js'
 import { DeleteCategoryCommand } from './Toolbox/ToolboxCommands/DeleteCategoryCommand.js'
+import { MoveCategoryCommand } from './Toolbox/ToolboxCommands/MoveCategoryCommand.js';
 import { modal } from './Modal.js';
 
 export class Editor {
@@ -817,7 +818,8 @@ export class Editor {
             toolboxInfo,
             this.theme['Context Menu'],
             {newCategory : () => this.EventHandler_NewCategory(),
-            deleteCategory : (a) => this.EventHandler_DeleteCategory(a)}
+            deleteCategory : (a) => this.EventHandler_DeleteCategory(a),
+            moveCategory: (a,b) => this.EventHandler_MoveCategory(a,b)}
             );
         this.toolbox.SetToolbox_MaxWidth(() => {
             return 0.8 * this.$container.width();
@@ -2270,6 +2272,14 @@ export class Editor {
         ))
     }
 
+    EventHandler_MoveCategory(category,move){
+        this.commands.ExecuteAndAppend(new MoveCategoryCommand(
+            this.toolbox,
+            category,
+            move
+        ))
+    }
+
     SetupModal_NewCategory(){
         this.toolbarModal = new modal(
             "New_Category", 
@@ -2283,13 +2293,17 @@ export class Editor {
                 },
                 ()=>{
                     let text = this.toolbarModal.GetInputValue();
+                    let path = this.toolbarModal.GetPath();
+                    if( path == "./Images/Toolbox/"){
+                        path = "./Images/Toolbox/placeholder.svg";
+                    }
                     if(text == null || text == ""){
                         //this.toolbarModal.Close_();
                         return;
                     }
                     this.commands.ExecuteAndAppend(new NewCategoryCommand (
                             this.toolbox,
-                            {name: text, icon:"./Images/Toolbox/placeholder.svg", blocks:[]}
+                            {name: text, icon:path, blocks:[]}
                             ))
                     
                     this.toolbarModal.Close_();

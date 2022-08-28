@@ -1,8 +1,4 @@
-me to new category na dinei kai icons anoigontas directory path sto images
-    i full path na zitaei
 
-deksi klik sto context menu gia move up - move down
-    kai auto sto undo / redo
 
 
 
@@ -14,6 +10,10 @@ dc : Input in new / category can be vulnerable to xss attack
 
 
 DONE:
+
+
+deksi klik sto context menu gia move up - move down
+    kai auto sto undo / redo
 
 flag canRemove = false by default or flag is absent
 sta user defined  blocks = true 
@@ -31,3 +31,6 @@ na mporw me undo redo na akirwsw ksanakanw delete
 to delete me context menu sta categories
     na min exei prompt gia are you sure kathws tha mpainei sto
     undo / redo history
+
+me to new category na dinei kai icons anoigontas directory path sto images
+    i full path na zitaei

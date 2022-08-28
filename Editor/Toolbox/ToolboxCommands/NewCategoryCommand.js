@@ -4,7 +4,7 @@ import { ToolboxCommand } from "./ToolboxCommand.js";
 export class NewCategoryCommand extends ToolboxCommand {
   NewCategory;
   Index;
-  
+  blocks;
 
   constructor(toolbox,  NewCategory){
       super(toolbox);
@@ -21,7 +21,7 @@ export class NewCategoryCommand extends ToolboxCommand {
   }
 
   Redo(){
-      this.toolbox.AddCategoryAtIndex(this.NewCategory, this.Index);
+      this.Execute();
   }
 
 }

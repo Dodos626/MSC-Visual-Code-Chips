@@ -548,37 +548,11 @@ export class Toolbox {
         console.log(this.categories)
     }
 
-    AddCategoryAtIndex(category, index){
-        console.log(this.categories)
-        if(index >= this.categories.length ){
-            this.UpdateCategories(category);
-            return;
-        }
-        this.categories.splice(index, 0,  new MenuCategory(category.name, category.icon, '#A5A5A5'));
-        this.categories[index].canRemove = true;
-
-        for (let i = this.categories.length-1 ; i > index ; i--){
-            this.blocks[i] = this.blocks[i-1];
-        }
-        
-        this.blocks[index] = category.blocks.map(blockJson => {
-            let b = EditorElementParser.FromJson( blockJson, block => this.BindElem(block) );
-            this.SetBlockDragEvents(category.name, b);
-            return b;
-        });
-
-        this.$toolboxMenu.empty();
-        this.Render();
-        this.ApplyTheme();
-        this.Select_(this.categories[0]);
-        
-    }
-
     DeleteCategory(categoryName){
         let index = this.FindIndexCategory(categoryName);
         assert(index != -1, "didnt found category for deletion");
-        for(let i = this.categories.length-1; i >= index ; i--){
-            this.blocks[i] = this.blocks[i-1]
+        for(let i = index+1 ; i < this.categories.length ; i++){
+            this.blocks[i-1] = this.blocks[i]
         }
         delete this.blocks[this.categories.length-1];
         this.categories.splice(index,1)
@@ -586,6 +560,18 @@ export class Toolbox {
         this.Render();
         this.ApplyTheme();
         this.Select_(this.categories[0]);
+    }
+
+    UndoDeleteCategory(category,blocks,index){
+        for (let i = this.categories.length ; i > index ; i--){
+            this.blocks[i] = this.blocks[i-1];
+        }
+        this.categories.splice(index, 0,  category);
+        this.blocks[index] = blocks;
+        this.$toolboxMenu.empty();
+        this.Render();
+        this.ApplyTheme();
+        this.categories[index].GetView().click()
     }
 
     FindIndexCategory(categoryName){
@@ -837,8 +823,10 @@ export class Toolbox {
             // NA ALLAKSW TO PWS PIANW TO TEXT
             var text = e.currentTarget.children[0].lastChild.innerText;
             var index = this.FindIndexCategory(text)
+            if(!this.categories[index].GetView().hasClass('selected')){
+                this.categories[index].GetView().click()
+            }
             
-            this.categories[index].GetView().click()
             
             this.$contextMenuContainer.empty();
             
@@ -857,7 +845,20 @@ export class Toolbox {
                             disabled: !this.categories[index].canRemove,
                             handler: () => {this.ContextMenuHandlers['deleteCategory'](this.categories[index])}
                         }
-                    ],
+                    ],[
+                        {
+                            name: "Move Up",
+                            shortcut: "",
+                            disabled: index == 0,
+                            handler: () => {this.ContextMenuHandlers['moveCategory'](this.categories[index],-1)}
+                        },
+                        {
+                            name: "Move Down",
+                            shortcut: "",
+                            disabled: index == this.categories.length -1,
+                            handler: () => {this.ContextMenuHandlers['moveCategory'](this.categories[index],1)}
+                        }
+                    ]
                     
                 ]
             )

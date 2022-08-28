@@ -7,12 +7,14 @@ export class modal {
   has_input = false;
   open_on_render = false;
   input = "";
+  path = "";
   on_close;
 
   $modal
   $modal_content
   $text
   $input_container
+  $inputPath_container
   
   $container
 
@@ -49,9 +51,16 @@ export class modal {
     this.$modal_content.append(this.$text);
 
     if(this.has_input){
+      let $inputs_container_tmp = $('<div/>')
       this.$input_container = $('<input/>').addClass("input-container").attr('id', 'input-container'+this.name).attr("type", "text").attr("autocomplete", "off");
-    
-      this.$modal_content.append(this.$input_container);
+      $inputs_container_tmp.append(this.$input_container);
+
+      $inputs_container_tmp.append($('<div/>').addClass("small-text").html('Give path to icon or leave it blank for placeholder icon'))
+      
+      this.$inputPath_container = $('<input/>').addClass("input-container").attr('id', 'input-container-path'+this.name).attr("type", "text").attr("autocomplete", "off");
+      this.$inputPath_container.val("./Images/Toolbox/")
+      $inputs_container_tmp.append(this.$inputPath_container);
+      this.$modal_content.append($inputs_container_tmp);
     }
     
 
@@ -96,6 +105,13 @@ export class modal {
     this.input = this.$input_container.val();
     this.$input_container.val("");
     return this.input;
+  }
+
+  GetPath(){
+    if(!this.has_input) return null;
+    this.path = this.$inputPath_container.val();
+    this.$inputPath_container.val("./Images/Toolbox/");
+    return this.path;
   }
 
   AddWindowEvent(){
