@@ -5,17 +5,26 @@ export class DeleteCommand extends ToolboxCommand {
     block;
     categoryName;
     index;
+    categoryIndex;
 
     constructor(toolbox, block, categoryName){
         super(toolbox);
-        this.block = block, this.categoryName = categoryName;
+        this.block = block,
+        
+        this.categoryName = categoryName;
+        console.log(categoryName);
+        for (let i = 0; i < this.toolbox.categories.length ; i++){
+            if(this.toolbox.categories[i].text == categoryName){
+                this.categoryIndex = i;
+            }
+        }
     }
 
     Execute(){
         assert(this.index === undefined);
-
-        let blocks = this.toolbox.blocks[this.categoryName];
+        let blocks = this.toolbox.blocks[this.categoryIndex]; 
         this.index = blocks.indexOf(this.block);
+        
         assert(this.index !== -1);
         blocks.splice(this.index, 1);
 

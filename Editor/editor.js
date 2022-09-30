@@ -2224,6 +2224,9 @@ export class Editor {
 
     EventHandler_Execute(){
         if (this.onExecute){
+            //edw na parsarw olo to this.code kai na psaksw ola ta ast
+            //kai ama blepw selection block na kanw highlight
+            //na petaw ena modal kai na min kanw execute
             let code = EditorElementParser.FromJson( this.code.ToJsonRec(), (elem) => {
                 if (elem.GetType() === EditorElementTypes.Group || elem.GetType() === EditorElementTypes.RepetitionGroup){
                     elem.elems = elem.elems.filter(elem =>
@@ -2232,7 +2235,7 @@ export class Editor {
                     );
                 }
             });
-
+            console.log(this.code.GetCustomizableView())
             this.onExecute(code);           
         }
     }

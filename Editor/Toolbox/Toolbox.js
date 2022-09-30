@@ -513,7 +513,7 @@ export class Toolbox {
         let scrollTop = this.$toolboxBlocks.scrollTop();
 
         this.$toolboxBlocks.empty();
-
+        
         for (let categoryName in this.blocks){
             this.RenderCategoryBlocks_(categoryName);
         }

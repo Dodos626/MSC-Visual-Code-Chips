@@ -8,6 +8,13 @@ export class MoveCommand {
     insertCommand;
 
     constructor(toolbox, block, categoryFrom, categoryTo, destIndex){
+        //gia kapoio logo to categoryFrom ama kaneis
+        //2 move sto idio block anti na erxete me name erxete me arithmo
+        //opote to metafrazw sto name
+        if(!isNaN(categoryFrom)){
+            categoryFrom = toolbox.categories[categoryFrom].text
+        }
+        console.log(block,categoryFrom,categoryTo,destIndex);
         this.deleteCommand = new DeleteCommand(toolbox, block, categoryFrom);
         this.insertCommand = new InsertCommand(toolbox, block, categoryTo, destIndex);
     }

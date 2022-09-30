@@ -12,13 +12,15 @@ export class InsertCommand extends ToolboxCommand {
     }
 
     Execute(){
+
+        
         this.toolbox.blocks[this.categoryName].splice(this.index, 0, this.block);
         this.toolbox.SetBlockDragEvents(this.categoryName, this.block);
         this.toolbox.RenderAllBlocks();
     }
 
     Undo(){
-        this.toolbox.blocks[this.categoryName].splice(this.index, 1);
+        this.toolbox.blocks[this.categoryIndex].splice(this.index, 1);
         this.toolbox.RenderAllBlocks();
     }
 
