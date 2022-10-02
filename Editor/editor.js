@@ -2250,13 +2250,8 @@ export class Editor {
             }
             //if it has elems inside it recursively search them too
             if(block.elems){
-                //if flag is true then the outcome of the search maybe become false
-                if(flag){
-                    flag = this.AllowExecution(block)
-                }else{ //if flag is false we need to keep it false no matter what comes next
-                    this.AllowExecution(block)
-                }
-                
+                //if flag is false we need to keep it false
+                flag ? flag = this.AllowExecution(block) : this.AllowExecution(block)
             }else if (block.GetType()==EditorElementTypes.SelectionBlock){ // check if its a selection block
                 block.GetCustomizableView().addClass('highlighted_error')
                 flag = false;
