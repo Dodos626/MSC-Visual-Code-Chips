@@ -2224,20 +2224,45 @@ export class Editor {
 
     EventHandler_Execute(){
         if (this.onExecute){
-            //edw na parsarw olo to this.code kai na psaksw ola ta ast
-            //kai ama blepw selection block na kanw highlight
-            //na petaw ena modal kai na min kanw execute
-            let code = EditorElementParser.FromJson( this.code.ToJsonRec(), (elem) => {
-                if (elem.GetType() === EditorElementTypes.Group || elem.GetType() === EditorElementTypes.RepetitionGroup){
-                    elem.elems = elem.elems.filter(elem =>
-                        elem.GetType() !== EditorElementTypes.NewLine &&
-                        elem.GetType() !== EditorElementTypes.Tab
-                    );
-                }
-            });
-            console.log(this.code.GetCustomizableView())
-            this.onExecute(code);           
+            if (this.AllowExecution(this.code)){
+                let code = EditorElementParser.FromJson( this.code.ToJsonRec(), (elem) => {
+                    if (elem.GetType() === EditorElementTypes.Group || elem.GetType() === EditorElementTypes.RepetitionGroup){
+                        elem.elems = elem.elems.filter(elem =>
+                            elem.GetType() !== EditorElementTypes.NewLine &&
+                            elem.GetType() !== EditorElementTypes.Tab
+                        );
+                    }
+                });
+                this.onExecute(code);   
+            }else{
+                alert("Some elements have not been specialized to source text - they are highlighted!")
+            }
         }
+    }
+
+    AllowExecution(code){
+        let flag = true;
+        for (let i = 0 ; i < code.elems.length; i++){
+            let block = code.elems[i];
+            //skip blank lines and tabs
+            if(block.GetType()==EditorElementTypes.NewLine || block.GetType() == EditorElementTypes.Tab){
+                continue;
+            }
+            //if it has elems inside it recursively search them too
+            if(block.elems){
+                //if flag is true then the outcome of the search maybe become false
+                if(flag){
+                    flag = this.AllowExecution(block)
+                }else{ //if flag is false we need to keep it false no matter what comes next
+                    this.AllowExecution(block)
+                }
+                
+            }else if (block.GetType()==EditorElementTypes.SelectionBlock){ // check if its a selection block
+                block.GetCustomizableView().addClass('highlighted_error')
+                flag = false;
+            }
+        }
+        return flag;
     }
 
     EventHandler_ShowGenerationPath() {

@@ -469,6 +469,12 @@ body{
     position: relative;
 }
 
+.highlighted_error{
+    border-color: rgb(255, 0, 0) !important;
+    box-shadow: inset 0 0 0 1px rgb(255, 0, 0), 0 0 0 1px rgb(255, 0, 0) !important;
+    position: relative;
+}
+
 .selected.highlighted{
     border-color: #FFE34D !important;
 }
