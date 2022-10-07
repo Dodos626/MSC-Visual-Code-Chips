@@ -1,9 +1,24 @@
 
 TODO
- deletecommand.js grammi 18 pernei me lathos tropo to blocks , ta allaksa se object tha thelei
- allagi se ola ta commands probs
+
+ta config js na ginun json
+
+ola ta commands na dw ama thelun to isNaN (insert)
+
+delete command , new category , move na allaksun  to pu apothikeuoun history,
+anti gia to commands ston editor na mpei sto toolbox/editorToolbar
+
+na min ginontai delete oi basikes entoles 
+
+otan kanw focus ston editor na ginete highlight border i ama ginete focus to toolbar antistoixa
+ta undo redo anaferontai sto focused menu 
 
 
+to error highlight na feugei meta to ok kai na ta krataw se mia lista
+
+ean den einai kanena apo ta error sto view na kanw scroll sto prwto
+
+otan tha mporw na fortwsw mia glwssa na mporw me gui na peirazw ta themes kai na exw apply / preview
 
 
 KNOWN ISSUES:
