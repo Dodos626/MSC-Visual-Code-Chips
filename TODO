@@ -11,7 +11,6 @@ otan kanw focus ston editor na ginete highlight border i ama ginete focus to too
 ta undo redo anaferontai sto focused menu 
 
 
-ean den einai kanena apo ta error sto view na kanw scroll sto prwto
 
 otan tha mporw na fortwsw mia glwssa na mporw me gui na peirazw ta themes kai na exw apply / preview
 
@@ -26,6 +25,8 @@ dc : Input in new / category can be vulnerable to xss attack
 
 
 DONE:
+
+ean den einai kanena apo ta error sto view na kanw scroll sto prwto
 
 to error highlight na feugei meta to ok kai na ta krataw se mia lista
 

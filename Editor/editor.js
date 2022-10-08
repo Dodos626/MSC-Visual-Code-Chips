@@ -2237,15 +2237,18 @@ export class Editor {
                 });
                 this.onExecute(code);   
             }else{
+                arr[0].GetCustomizableView()[0].scrollIntoView()
                 //without the set timeout alert preceeded the highlighting of errors
                 setTimeout(()=>{
+                    
                     alert(arr.length + " elements have not been specialized to source text - they are highlighted!")
                     //after clicking ok the error highlight gets removed
                     arr.forEach(element => {
                         element.GetCustomizableView().removeClass('highlighted_error')
                     });
                 },
-                1)
+                5
+                )
             }
         }
     }
