@@ -2224,7 +2224,9 @@ export class Editor {
 
     EventHandler_Execute(){
         if (this.onExecute){
-            if (this.AllowExecution(this.code)){
+            let arr = this.AllowExecution(this.code);
+            console.log(arr);
+            if (arr.length == 0){
                 let code = EditorElementParser.FromJson( this.code.ToJsonRec(), (elem) => {
                     if (elem.GetType() === EditorElementTypes.Group || elem.GetType() === EditorElementTypes.RepetitionGroup){
                         elem.elems = elem.elems.filter(elem =>
@@ -2235,13 +2237,21 @@ export class Editor {
                 });
                 this.onExecute(code);   
             }else{
-                alert("Some elements have not been specialized to source text - they are highlighted!")
+                //without the set timeout alert preceeded the highlighting of errors
+                setTimeout(()=>{
+                    alert(arr.length + " elements have not been specialized to source text - they are highlighted!")
+                    //after clicking ok the error highlight gets removed
+                    arr.forEach(element => {
+                        element.GetCustomizableView().removeClass('highlighted_error')
+                    });
+                },
+                1)
             }
         }
     }
 
     AllowExecution(code){
-        let flag = true;
+        let error_array = [];
         for (let i = 0 ; i < code.elems.length; i++){
             let block = code.elems[i];
             //skip blank lines and tabs
@@ -2250,14 +2260,14 @@ export class Editor {
             }
             //if it has elems inside it recursively search them too
             if(block.elems){
-                //if flag is false we need to keep it false
-                flag ? flag = this.AllowExecution(block) : this.AllowExecution(block)
+                
+                error_array = error_array.concat( (this.AllowExecution(block)))    
             }else if (block.GetType()==EditorElementTypes.SelectionBlock){ // check if its a selection block
                 block.GetCustomizableView().addClass('highlighted_error')
-                flag = false;
+                error_array.push(block)
             }
         }
-        return flag;
+        return error_array;
     }
 
     EventHandler_ShowGenerationPath() {
