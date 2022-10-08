@@ -1,16 +1,11 @@
 
 TODO:
 
-
 delete command , new category , move na allaksun  to pu apothikeuoun history,
 anti gia to commands ston editor na mpei sto toolbox/editorToolbar
 
-na min ginontai delete oi basikes entoles 
-
 otan kanw focus ston editor na ginete highlight border i ama ginete focus to toolbar antistoixa
 ta undo redo anaferontai sto focused menu 
-
-
 
 otan tha mporw na fortwsw mia glwssa na mporw me gui na peirazw ta themes kai na exw apply / preview
 
@@ -25,6 +20,8 @@ dc : Input in new / category can be vulnerable to xss attack
 
 
 DONE:
+
+na min ginontai delete oi basikes entoles 
 
 ean den einai kanena apo ta error sto view na kanw scroll sto prwto
 

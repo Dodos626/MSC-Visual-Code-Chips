@@ -334,6 +334,8 @@ export class Toolbox {
             this.blocks[i] = categories[i].blocks.map(blockJson => {
                 let b = EditorElementParser.FromJson( blockJson, block => this.BindElem(block) );
                 this.SetBlockDragEvents(categories[i].name, b);
+                //original grammar blocks cannot be removed
+                b.canRemove=false;
                 return b;
             })
             
@@ -587,25 +589,35 @@ export class Toolbox {
     RenderBlock(block, $category, categoryName){
         let $wrapper = $('<div/>').addClass('category-block');
         
-        let $deleteButton = $('<div/>').addClass('delete-button')
-            .append( $('<div/>').addClass('icon') );
-
         block.Render($wrapper);
 
-        $wrapper.append($deleteButton);
+        if(block.canRemove !== false){
+            let $deleteButton = $('<div/>').addClass('delete-button')
+            .append( $('<div/>').addClass('icon') );
+
+            $wrapper.on('mouseenter', () => {
+                $deleteButton.css('visibility', 'visible');
+            });
+    
+            $wrapper.on('mouseleave', () => {
+                $deleteButton.css('visibility', 'hidden');
+            });
+    
+            
+            $deleteButton.on('click', () => {
+                this.history.ExecuteAndAppend( new DeleteCommand(this, block, categoryName) );
+            });
+
+            $wrapper.append($deleteButton);
+        }
+        
+
+        
+
+        
         $category.append($wrapper);
     
-        $wrapper.on('mouseenter', () => {
-            $deleteButton.css('visibility', 'visible');
-        });
-
-        $wrapper.on('mouseleave', () => {
-            $deleteButton.css('visibility', 'hidden');
-        });
-
-        $deleteButton.on('click', () => {
-            this.history.ExecuteAndAppend( new DeleteCommand(this, block, categoryName) );
-        });
+        
     }
 
     RemoveBlock(block, categoryName){
