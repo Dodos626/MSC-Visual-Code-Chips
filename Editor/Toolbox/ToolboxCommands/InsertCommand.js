@@ -9,6 +9,7 @@ export class InsertCommand extends ToolboxCommand {
     constructor(toolbox, block, categoryName, index){
         super(toolbox);
         this.block = block, this.categoryName = categoryName, this.index = index;
+
     }
 
     Execute(){
@@ -20,7 +21,7 @@ export class InsertCommand extends ToolboxCommand {
     }
 
     Undo(){
-        this.toolbox.blocks[this.categoryIndex].splice(this.index, 1);
+        this.toolbox.blocks[this.categoryName].splice(this.index, 1);
         this.toolbox.RenderAllBlocks();
     }
 

@@ -38,7 +38,7 @@ export class DeleteCommand extends ToolboxCommand {
         assert(this.index !== undefined);
 
         this.toolbox.SetBlockDragEvents(this.categoryName, this.block);
-        this.toolbox.blocks[this.categoryName].splice(this.index, 0, this.block);
+        this.toolbox.blocks[this.categoryIndex].splice(this.index, 0, this.block);
         this.index = undefined;
 
         this.toolbox.RenderAllBlocks();

@@ -1,9 +1,6 @@
 
-TODO
+TODO:
 
-ta config js na ginun json
-
-ola ta commands na dw ama thelun to isNaN (insert)
 
 delete command , new category , move na allaksun  to pu apothikeuoun history,
 anti gia to commands ston editor na mpei sto toolbox/editorToolbar
@@ -20,6 +17,10 @@ ean den einai kanena apo ta error sto view na kanw scroll sto prwto
 
 otan tha mporw na fortwsw mia glwssa na mporw me gui na peirazw ta themes kai na exw apply / preview
 
+NEED FURTHERMORE SEARCH:
+
+ola ta commands na dw ama thelun to isNaN (insert)
+
 
 KNOWN ISSUES:
 
@@ -28,6 +29,7 @@ dc : Input in new / category can be vulnerable to xss attack
 
 DONE:
 
+ta config js na ginun json
 
 deksi klik sto context menu gia move up - move down
     kai auto sto undo / redo
