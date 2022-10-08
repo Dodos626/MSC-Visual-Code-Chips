@@ -1,10 +1,10 @@
 import {langConfig } from './Config/languageConfig.js'
 import {toolboxConfig} from './Config/toolboxConfig.js'
 import {quickReplaceConfig} from './Config/quickReplaceConfig.js'
-import { darkTheme as darkThemeConfig } from './Config/Themes/darkTheme.js';
-import { lightTheme as lightThemeConfig } from './Config/Themes/lightTheme.js';
-import { colorfulTheme as colorfulThemeConfig } from './Config/Themes/colorfulTheme.js';
-import { darkColorfulTheme as darkColorfulThemeConfig } from './Config/Themes/darkColorfulTheme.js';
+import { darkTheme as darkThemeConfig } from './Themes/darkTheme.js';
+import { lightTheme as lightThemeConfig } from './Themes/lightTheme.js';
+import { colorfulTheme as colorfulThemeConfig } from './Themes/colorfulTheme.js';
+import { darkColorfulTheme as darkColorfulThemeConfig } from './Themes/darkColorfulTheme.js';
 
 
 export let config = {

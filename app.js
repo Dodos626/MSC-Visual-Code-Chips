@@ -1,9 +1,10 @@
-import { config as codeChipsConfig } from './config.js'
 import { CodeChips } from './CodeChips.js'
-import { config as javaClassesConfig } from './javaClassDef.js'
-
 import { ToJavascriptVisitor } from './Generators/ToJavascriptVisitor.js';
 import { AstHost } from './Generators/AstHost.js';
+import { assert } from './Utils/Assert.js'
+
+import {config as codeChipsConfig} from './Config/CodeChips/config.js'
+import  javaClassDef from './Config/JavaClassDef/javaClassDef.json' assert {type: 'json'} //translates json to js obj automatically 
 
 $(document).ready(function () {
 
@@ -29,10 +30,10 @@ $(document).ready(function () {
         'Java Classes': CodeChips.Inject(
             $('#injection-div1'), 
             {
-                languageJson:   javaClassesConfig.language,
-                themeJson:      javaClassesConfig.darkTheme,
-                toolboxJson:    javaClassesConfig.toolbox,
-                quickReplace:   javaClassesConfig.quickReplace
+                languageJson:   javaClassDef.language,
+                themeJson:      javaClassDef.darkTheme,
+                toolboxJson:    javaClassDef.toolbox,
+                quickReplace:   javaClassDef.quickReplace
             }
         ),
     };
@@ -57,8 +58,8 @@ $(document).ready(function () {
             'Light Theme':              codeChipsConfig.lightTheme
         },
         'Java Classes': {
-            'Dark Theme':               javaClassesConfig.darkTheme,
-            'Light Theme':              javaClassesConfig.lightTheme
+            'Dark Theme':               javaClassDef.darkTheme,
+            'Light Theme':              javaClassDef.lightTheme
         }
     };
 
