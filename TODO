@@ -1,15 +1,15 @@
 
 TODO:
 
-delete command , new category , move na allaksun  to pu apothikeuoun history,
-anti gia to commands ston editor na mpei sto toolbox/editorToolbar
-
 otan kanw focus ston editor na ginete highlight border i ama ginete focus to toolbar antistoixa
 ta undo redo anaferontai sto focused menu 
 
 otan tha mporw na fortwsw mia glwssa na mporw me gui na peirazw ta themes kai na exw apply / preview
 
-NEED FURTHERMORE SEARCH:
+DONE BUT NEED FURTHERMORE SEARCH:
+
+otan kanw focus ston editor na ginete highlight border i ama ginete focus to toolbar antistoixa
+    (TO TOOLBAR DEKSIA EXEI ENA DIV PU KANEI TO BORDER TOU WORKSPACE SWSTO ALLA TO TOOLBAR EINAI OFF)
 
 ola ta commands na dw ama thelun to isNaN (insert) //fixed but not so sure yet
 
@@ -20,6 +20,8 @@ dc : Input in new / category can be vulnerable to xss attack
 
 
 DONE:
+delete command , new category , move na allaksun  to pu apothikeuoun history,
+anti gia to commands ston editor na mpei sto toolbox/editorToolbar
 
 na min ginontai delete oi basikes entoles 
 

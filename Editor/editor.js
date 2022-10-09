@@ -533,7 +533,10 @@ export class Editor {
             this.$toastMessages,
             this.$contextMenuContainer
         );
-        this.$workspace.on('click', ()=> this.Select(undefined) );
+        this.$workspace.on('click', ()=> {
+            this.Select(undefined);
+            this.HighlightFocusedWindow(this.$workspace); 
+        });
 
         this.$toolboxspace = $('<div/>').addClass('toolboxspace');
         
@@ -831,6 +834,9 @@ export class Editor {
         
 
         this.toolbox.RenderAllBlocks();
+        this.toolbox.$toolboxBlocks.on('click', ()=> {
+            this.HighlightFocusedWindow(this.toolbox.$toolboxBlocks); 
+        });
     }
 
     SetUpContextMenu_(){
@@ -2302,14 +2308,14 @@ export class Editor {
     }
 
     EventHandler_DeleteCategory(category){
-        this.commands.ExecuteAndAppend(new DeleteCategoryCommand(
+        this.toolbox.history.ExecuteAndAppend(new DeleteCategoryCommand(
             this.toolbox,
             category
         ))
     }
 
     EventHandler_MoveCategory(category,move){
-        this.commands.ExecuteAndAppend(new MoveCategoryCommand(
+        this.toolbox.history.ExecuteAndAppend(new MoveCategoryCommand(
             this.toolbox,
             category,
             move
@@ -2337,7 +2343,7 @@ export class Editor {
                         //this.toolbarModal.Close_();
                         return;
                     }
-                    this.commands.ExecuteAndAppend(new NewCategoryCommand (
+                    this.toolbox.history.ExecuteAndAppend(new NewCategoryCommand (
                             this.toolbox,
                             {name: text, icon:path, blocks:[]}
                             ))
@@ -2352,7 +2358,15 @@ export class Editor {
         );
         
     }
-
+    HighlightFocusedWindow(focus){
+        if(focus == this.$workspace){
+            this.$workspace.addClass("highlighted_workspace")
+            this.toolbox.$toolboxBlocks.removeClass("highlighted_toolbox");
+        }else{
+            this.$workspace.removeClass("highlighted_workspace")
+            this.toolbox.$toolboxBlocks.addClass("highlighted_toolbox");
+        }
+    }
     
 
     
