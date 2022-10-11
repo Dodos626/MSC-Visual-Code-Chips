@@ -263,6 +263,7 @@ export class Editor {
 
         this.productionPaths = this.language.ComputeReachabilityMatrix();
         // console.log(this.productionPaths);
+        this.HighlightWindow(this.$workspace)
     }
 
     IsCorrectTheme(theme){
@@ -535,7 +536,7 @@ export class Editor {
         );
         this.$workspace.on('click', ()=> {
             this.Select(undefined);
-            this.HighlightFocusedWindow(this.$workspace); 
+            this.HighlightWindow(this.$workspace); 
         });
 
         this.$toolboxspace = $('<div/>').addClass('toolboxspace');
@@ -764,7 +765,7 @@ export class Editor {
                     class:      'editor-toolbar-blocks-button',
                     handler:    () => {
                         this.EventHandler_EnterBlockView();
-
+                        this.editorToolbar.Allow_EnableAllButtons();
                         if (this.commands.GetUndoSize())    this.editorToolbar.EnableButton('editor-toolbar-undo-button');
                         if (this.commands.GetRedoSize())    this.editorToolbar.EnableButton('editor-toolbar-redo-button');
                     
@@ -778,9 +779,9 @@ export class Editor {
                     handler:    () => {
                         this.EventHandler_EnterSourceCodeView();
 
-                        this.editorToolbar.DisableButton('editor-toolbar-undo-button');
-                        this.editorToolbar.DisableButton('editor-toolbar-redo-button');
-                        this.editorToolbar.DisableButton('editor-toolbar-play-button');                    
+                        this.editorToolbar.BlockAnd_DisableButton('editor-toolbar-undo-button');
+                        this.editorToolbar.BlockAnd_DisableButton('editor-toolbar-redo-button');
+                        this.editorToolbar.BlockAnd_DisableButton('editor-toolbar-play-button');                    
                     },
                     tooltip:    'See the source code'
                 },
@@ -789,9 +790,9 @@ export class Editor {
                     handler:    () => {
                         this.EventHandler_Enter_JavascriptView();
 
-                        this.editorToolbar.DisableButton('editor-toolbar-undo-button');
-                        this.editorToolbar.DisableButton('editor-toolbar-redo-button');
-                    
+                        this.editorToolbar.BlockAnd_DisableButton('editor-toolbar-undo-button');
+                        this.editorToolbar.BlockAnd_DisableButton('editor-toolbar-redo-button');
+                        this.editorToolbar.Allow_EnableButton('editor-toolbar-play-button');
                         if (this.onExecute) this.editorToolbar.EnableButton('editor-toolbar-play-button');
                     },
                     tooltip:    'See the JavasSript corresponding to the visual code'
@@ -835,7 +836,7 @@ export class Editor {
 
         this.toolbox.RenderAllBlocks();
         this.toolbox.$toolboxBlocks.on('click', ()=> {
-            this.HighlightFocusedWindow(this.toolbox.$toolboxBlocks); 
+            this.HighlightWindow(this.toolbox.$toolboxBlocks); 
         });
     }
 
@@ -2108,10 +2109,11 @@ export class Editor {
     }
 
     EventHandler_Undo_(){
-        if (this.commands.GetUndoSize()){
-            this.commands.Undo();
+        let history = this.UndoRedo_RefHistory()
+        if (history.GetUndoSize()){
+            history.Undo();
 
-            if (!this.commands.GetUndoSize()){
+            if (!history.GetUndoSize()){
                 this.editorToolbar.DisableButton('editor-toolbar-undo-button');
             }
 
@@ -2120,10 +2122,11 @@ export class Editor {
     }
 
     EventHandler_Redo_(){
-        if (this.commands.GetRedoSize()){
-            this.commands.Redo();
+        let history = this.UndoRedo_RefHistory()
+        if (history.GetRedoSize()){
+            history.Redo();
 
-            if (!this.commands.GetRedoSize()){
+            if (!history.GetRedoSize()){
                 this.editorToolbar.DisableButton('editor-toolbar-redo-button');
             }
 
@@ -2358,16 +2361,50 @@ export class Editor {
         );
         
     }
-    HighlightFocusedWindow(focus){
+
+    /**based on @param {$workspace || toolbox.$toolboxBlocks} focus highlights the window*/
+    HighlightWindow(focus){
         if(focus == this.$workspace){
             this.$workspace.addClass("highlighted_workspace")
             this.toolbox.$toolboxBlocks.removeClass("highlighted_toolbox");
+            this.HighlighWindow_UpdateButtons(this.commands)
         }else{
             this.$workspace.removeClass("highlighted_workspace")
             this.toolbox.$toolboxBlocks.addClass("highlighted_toolbox");
+            this.HighlighWindow_UpdateButtons(this.toolbox.history)
         }
     }
-    
+
+    /**@return the highlighted window element */
+    GetHighlightedWindow(){
+        if(this.$workspace.hasClass("highlighted_workspace")){
+            return this.$workspace
+        }
+        return this.toolbox.$toolboxBlocks
+    }
+
+    /**@return the history the undo/redo buttons are referencing */
+    UndoRedo_RefHistory(){
+        if(this.$workspace.hasClass("highlighted_workspace")){
+            return this.commands
+        }
+        return this.toolbox.history
+    }
+
+    /** @updates the buttons based on the @param history (highlighted menu history)*/
+    HighlighWindow_UpdateButtons(history){
+        if (!history.GetUndoSize()){
+            this.editorToolbar.DisableButton('editor-toolbar-undo-button');
+        }else{
+            this.editorToolbar.EnableButton('editor-toolbar-undo-button');
+        }
+
+        if (!history.GetRedoSize()){
+            this.editorToolbar.DisableButton('editor-toolbar-redo-button');
+        }else{
+            this.editorToolbar.EnableButton('editor-toolbar-redo-button');
+        } 
+    }
 
     
 }

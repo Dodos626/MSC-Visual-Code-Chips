@@ -10,6 +10,7 @@ export class EditorToolbar {
 
     buttons = {};
     disabledButtons = {};
+    forceDisabledButtons = {};
 
     currContextMenu;
     $selectedTitle;
@@ -136,8 +137,25 @@ export class EditorToolbar {
     }
 
     EnableButton(buttonClass){
+        if(this.forceDisabledButtons[buttonClass]==true){
+            return;
+        }
         this.buttons[buttonClass].removeClass('disabled-button');
         this.disabledButtons[buttonClass] = false;
+    }
+
+    BlockAnd_DisableButton(buttonClass){
+        this.buttons[buttonClass].addClass('disabled-button');
+        this.disabledButtons[buttonClass] = true;
+        this.forceDisabledButtons[buttonClass] = true;
+    }
+
+    Allow_EnableButton(buttonClass){
+        this.forceDisabledButtons[buttonClass] = false;
+    }
+
+    Allow_EnableAllButtons(){
+        this.forceDisabledButtons = {};
     }
 
     CloseCurrentContextMenu(){

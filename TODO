@@ -1,8 +1,7 @@
 
 TODO:
 
-otan kanw focus ston editor na ginete highlight border i ama ginete focus to toolbar antistoixa
-ta undo redo anaferontai sto focused menu 
+Ta undo redo buttons kai to focus na kanoun update gia kathe action
 
 otan tha mporw na fortwsw mia glwssa na mporw me gui na peirazw ta themes kai na exw apply / preview
 
@@ -20,6 +19,10 @@ dc : Input in new / category can be vulnerable to xss attack
 
 
 DONE:
+
+otan kanw focus ston editor na ginete highlight border i ama ginete focus to toolbar antistoixa
+ta undo redo anaferontai sto focused menu 
+
 delete command , new category , move na allaksun  to pu apothikeuoun history,
 anti gia to commands ston editor na mpei sto toolbox/editorToolbar
 
