@@ -263,7 +263,7 @@ export class Editor {
 
         this.productionPaths = this.language.ComputeReachabilityMatrix();
         // console.log(this.productionPaths);
-        this.HighlightWindow(this.$workspace)
+        this.FocusWorkspace();
     }
 
     IsCorrectTheme(theme){
@@ -536,7 +536,7 @@ export class Editor {
         );
         this.$workspace.on('click', ()=> {
             this.Select(undefined);
-            this.HighlightWindow(this.$workspace); 
+            this.FocusWorkspace(); 
         });
 
         this.$toolboxspace = $('<div/>').addClass('toolboxspace');
@@ -836,14 +836,14 @@ export class Editor {
 
         this.toolbox.RenderAllBlocks();
         this.toolbox.$toolboxBlocks.on('click', ()=> {
-            this.HighlightWindow(this.toolbox.$toolboxBlocks); 
+            this.FocusToolbox(); 
         });
     }
 
     SetUpContextMenu_(){
         this.$workspace.on('contextmenu', (e) => {
             if (this.viewMode === Editor.ViewMode.JsView) return;
-
+            this.FocusWorkspace()
             e.preventDefault();
             this.Select(undefined);
             
@@ -1238,7 +1238,7 @@ export class Editor {
         elem.SetOnContextMenu((e, elem) => {
             if (elem === this.code)
                 return;
-
+            this.FocusWorkspace()
             e.preventDefault();
             e.stopPropagation();
 
@@ -2315,6 +2315,7 @@ export class Editor {
             this.toolbox,
             category
         ))
+        this.FocusToolbox()
     }
 
     EventHandler_MoveCategory(category,move){
@@ -2323,6 +2324,7 @@ export class Editor {
             category,
             move
         ))
+        this.FocusToolbox()
     }
 
     SetupModal_NewCategory(){
@@ -2352,7 +2354,7 @@ export class Editor {
                             ))
                     
                     this.toolbarModal.Close_();
-                    
+                    this.FocusToolbox()
                 }
                 
             ],
@@ -2360,6 +2362,16 @@ export class Editor {
             this.$toolbarModalContainer
         );
         
+    }
+
+    /**@highlights workspace and changes undo/redo buttons */
+    FocusWorkspace(){
+        this.HighlightWindow(this.$workspace)
+    }   
+
+    /**@highlights toolbox and changes undo/redo buttons */
+    FocusToolbox(){
+        this.HighlightWindow(this.toolbox.$toolboxBlocks)
     }
 
     /**based on @param {$workspace || toolbox.$toolboxBlocks} focus highlights the window*/
@@ -2398,7 +2410,6 @@ export class Editor {
         }else{
             this.editorToolbar.EnableButton('editor-toolbar-undo-button');
         }
-
         if (!history.GetRedoSize()){
             this.editorToolbar.DisableButton('editor-toolbar-redo-button');
         }else{
