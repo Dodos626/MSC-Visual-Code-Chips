@@ -753,6 +753,9 @@ export class Toolbox {
         category?.GetView()?.parent().append($('<div/>').addClass('selected-line'));
 
         this.selected = category;
+        //while scrolling into the blocks in the toolbox
+        //scrolls to the category in the menu that is selected
+        category?.GetView()[0]?.scrollIntoView({block:"end"})
     }
 
     CreateThemeStructure(){
