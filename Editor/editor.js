@@ -40,6 +40,7 @@ import { NewCategoryCommand } from './Toolbox/ToolboxCommands/NewCategoryCommand
 import { DeleteCategoryCommand } from './Toolbox/ToolboxCommands/DeleteCategoryCommand.js'
 import { MoveCategoryCommand } from './Toolbox/ToolboxCommands/MoveCategoryCommand.js';
 import { modal } from './Modal.js';
+import { EditPopup } from './EditorEditPopUps/EditPopup.js';
 
 export class Editor {
 
@@ -55,6 +56,9 @@ export class Editor {
     
     toolbarModal;
     $toolbarModalContainer;
+
+    EditPopup
+    $editPopupContainer;
 
     language;
     code;
@@ -252,7 +256,7 @@ export class Editor {
         this.SetWorkspace_DragAndDrop();
 
         this.SetupModal_NewCategory();
-        
+        this.SetupEditPopup(this.theme);
         this.SetUpEditorToolbar_();
 
         
@@ -390,7 +394,7 @@ export class Editor {
         this.ApplyCodeWorkspaceTheme(this.theme['Code Workspace']);
         this.toolbox.ApplyTheme(this.theme['Toolbox']);
         this.toolbarModal.ApplyTheme(this.theme['Toolbox']);
-        
+
         this.code.ForEachRec(elem => {
             elem.ApplyViewMode(this.viewMode);
         });
@@ -513,6 +517,7 @@ export class Editor {
 
         this.$toolbarModalContainer = $('<div/>').addClass('editor-toolbar-modal-container');
         
+        this.$editPopupContainer = $('<div/>').addClass('editor-edit-popup-container');
 
         this.$toastMessages = $('<div/>').addClass('editor-toast-messages');
         this.$workspaceAndToolbox = $('<div/>').addClass('workspace-and-toolbox');
@@ -544,7 +549,8 @@ export class Editor {
         this.$workspaceAndToolbox.append(this.$toolboxspace, this.$workspace);
 
         this.$editor = $('<div/>').addClass('editor').attr('id', this.id);
-        this.$editor.append(this.$editorToolbarContainer, this.$toolbarModalContainer, this.$workspaceAndToolbox);
+        this.$editor.append(this.$editorToolbarContainer, this.$toolbarModalContainer,
+                            this.$editPopupContainer, this.$workspaceAndToolbox);
         
         this.$editor.on('click', () => {
             this.$contextMenuContainer.empty();
@@ -736,6 +742,14 @@ export class Editor {
                     shortcut:   'Ctrl+P',
                     disabled:   () => this.viewMode !== EditorElementViewMode.BlockView,
                     handler:    () => this.EventHandler_NewCategory()
+                },
+            ],
+            [
+                {
+                    name:       'Edit Theme',
+                    shortcut:   'Ctrl+E+T',
+                    disabled:   () => this.viewMode !== EditorElementViewMode.BlockView,
+                    handler:    () => this.EditPopup.Open_()
                 },
             ],
         ]);
@@ -2417,5 +2431,8 @@ export class Editor {
         } 
     }
 
+    SetupEditPopup(theme){
+        this.EditPopup = new EditPopup("editor-popup",theme,this.$editPopupContainer);
+    }
     
 }
