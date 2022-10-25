@@ -131,6 +131,7 @@ export class EditPopup {
     }
 
     ApplyTheme(Themes){
+        console.log(Themes);
         let main_categories = ['.popup-navigation-menu','.popup-edit-menu','.panel']
         main_categories.forEach((category)=>{
             $(category).css(
@@ -139,6 +140,14 @@ export class EditPopup {
                   "color", Themes['Toolbox Menu Label']['theme']['FontColor']
               )
         })
+
+        $('button.accordion').css(
+            "color", Themes['Toolbox Menu Label']['theme']['FontColor']
+          ).css(
+            "background-color", Themes['Toolbox Menu']['theme']['BackgroundColor']
+          ).css(
+            "border", "solid 1px rgba(255,255,255,0.1)"
+          )
         
         
     }

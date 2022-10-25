@@ -39,8 +39,8 @@
 }
 
 .accordion.selected-option{
-  background-color: rgb(102, 14, 36);
-  color: #ccc;
+  background-color: rgb(102, 14, 36) !important;
+  color: #ccc !important;
 }
 
 /* Style the buttons that are used to open and close the accordion panel */
@@ -57,13 +57,13 @@
   
   /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
   .active, .accordion:hover {
-    background-color: #ccc;
-    color: #444;
+    background-color: #ccc !important;
+    color: #444 !important;
   }
 
   .selected-accordion{
-    background-color: #444;
-    color: #ccc;
+    background-color: #444 !important;
+    color: #ccc !important;
   }
   
   /* Style the accordion panel. Note: hidden by default */
