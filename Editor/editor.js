@@ -394,7 +394,7 @@ export class Editor {
         this.ApplyCodeWorkspaceTheme(this.theme['Code Workspace']);
         this.toolbox.ApplyTheme(this.theme['Toolbox']);
         this.toolbarModal.ApplyTheme(this.theme['Toolbox']);
-
+        this.EditPopup.ApplyTheme(this.theme['Toolbox']);
         this.code.ForEachRec(elem => {
             elem.ApplyViewMode(this.viewMode);
         });

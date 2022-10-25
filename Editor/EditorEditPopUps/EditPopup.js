@@ -1,4 +1,7 @@
 export class EditPopup {
+
+    
+
     name
     $container
     $modal
@@ -15,7 +18,6 @@ export class EditPopup {
         this.blocks = {'General':themes.Blocks.General, "Specific": themes.Blocks.Specific};
         this.name = name;
         this.$container = $container;
-
         this.Render($container)
     }
 
@@ -78,24 +80,9 @@ export class EditPopup {
         }
         
         if(reached_options){
-            $rootAccordion.click(()=>{
-                
-                this.Select_option($rootAccordion);
-                $option_menu.empty()
-                $option_menu.append($options)
-                
-            })
+            this.AssignOpenOptions($rootAccordion,$option_menu,$options)
         }else{
-            $rootAccordion.click(()=>{
-                this.Select_accordion($rootAccordion)
-                if($rootPanel.css('display')==='block'){
-                    $rootPanel.css('display','none');
-                    $rootAccordion.removeClass('selected-accordion')
-                }else{
-                    $rootPanel.css('display','block');
-                    $rootAccordion.addClass('selected-accordion')
-                }
-            })
+            this.AssignOpenPanel($rootPanel,$rootAccordion)
         }
         
         return [$rootAccordion,$rootPanel]
@@ -111,17 +98,48 @@ export class EditPopup {
             if(this.on_close != null){
                 this.on_close();
         }
-        if(!this.has_input) return;
-        this.$input_container.val("");
     }
 
-    Select_accordion($accordion){
-        
+    /** @param $panel is assigned to open at press of the @button $accordion */
+    AssignOpenPanel($panel,$accordion){
+        $accordion.click(()=>{
+            if($panel.css('display')==='block'){
+                $panel.css('display','none');
+                $accordion.removeClass('selected-accordion')
+            }else{
+                $panel.css('display','block');
+                $accordion.addClass('selected-accordion')
+            }
+        })
+    }
+
+     /** @param $options is assigned to open at press of the @param $accordion at the @param $option_menu */
+    AssignOpenOptions($accordion,$option_menu,$options){
+        $accordion.click(()=>{
+                
+            this.Select_option($accordion);
+            $option_menu.empty()
+            $option_menu.append($options)
+            
+        })
     }
 
     Select_option($option){
         $('.accordion.selected-option').removeClass('selected-option')
         $option.addClass("selected-option")
+        
+    }
+
+    ApplyTheme(Themes){
+        let main_categories = ['.popup-navigation-menu','.popup-edit-menu','.panel']
+        main_categories.forEach((category)=>{
+            $(category).css(
+                "background-color",Themes['Toolbox Menu']['theme']['BackgroundColor']
+              ).css(
+                  "color", Themes['Toolbox Menu Label']['theme']['FontColor']
+              )
+        })
+        
         
     }
 }
