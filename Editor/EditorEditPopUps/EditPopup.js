@@ -3,6 +3,8 @@ export class EditPopup {
     $container
     $modal
     $modal_content
+    $modal_edit_menu
+    $modal_edit_menu_content
     $close_button
     $accordion
 
@@ -18,66 +20,90 @@ export class EditPopup {
     }
 
     Render($container){
-        this.$modal = $('<div/>').addClass('modal').attr('id','edit-popup')
-        this.$modal_content = $('<div/>').addClass('modal-content')
+        this.$modal = $('<div/>').addClass('modal-edit-popup').attr('id','edit-popup')
+        this.$modal_content = $('<div/>').addClass('popup-navigation-menu')
         
+        this.$modal_edit_menu = $('<div/>').addClass('popup-edit-menu')
+
+
         let $close_button = $('<span/>').addClass('close').html('&times;');
         $close_button.click(() => { this.Close_() });
-        this.$modal_content.append($close_button);
+        this.$modal_edit_menu.append($close_button);
 
+        this.$modal_edit_menu_content = $('<div/>')
         
         
-        this.$accordion = this.CreateAccordion(this.blocks.General,this.$accordion,"General")
-        this.$accordion.append(this.CreateAccordion(this.blocks.Specific,this.$accordion,"Specific"))
+        this.$accordion = $('<div/>')
+        this.$accordion.append(this.CreateAccordion(this.blocks.General,"General",this.$modal_edit_menu_content))
+        this.$accordion.append(this.CreateAccordion(this.blocks.Specific,"Specific",this.$modal_edit_menu_content))
+
+        this.$modal_edit_menu.append(this.$modal_edit_menu_content)
         this.$modal_content.append(this.$accordion)
 
-        this.$modal.append(this.$modal_content);
+        this.$modal.append(this.$modal_content,this.$modal_edit_menu);
         $container.append(this.$modal);
         
 
     }
 
-    CreateAccordion(rootNode,$container,name){
+    CreateAccordion(rootNode,name,$option_menu){
         
         if (rootNode === null){return null}
-        $container = $('<div/>')
+        
         let $rootAccordion = $('<button/>').addClass('accordion').html(name)
         let $rootPanel = $('<div/>').addClass("panel")
-        
+        let $options = $('<div/>')
+        let reached_options = false;
         for(const key in rootNode){
             if (rootNode.hasOwnProperty(key)) {
                 let $accordion;
+                
+                //if there is another object call recursion else u are on options
                 if(typeof rootNode[key] === 'object' &&
                 rootNode[key] !== null &&
                 !Array.isArray(rootNode[key])){
-                    $accordion = this.CreateAccordion(rootNode[key],$container,key)
+                    $accordion = this.CreateAccordion(rootNode[key],key,$option_menu)
                 }else{
+                    reached_options = true;
                     $accordion = $("<div/>").addClass("edit-popup-option").html(key)
                 }
-                //let $accordion = $('<button/>').addClass('accordion').html(key)
                 
-                if($accordion==null){
-                    //edw eimaste sta options
-                    $accordion = $('<div/>').addClass("options-edit")
+                if(!reached_options){
+                    $rootPanel.append($accordion);
+                }else{
+                    $options.append($accordion);
                 }
-                $rootPanel.append($accordion);
+                
             }
         }
-
-        $rootAccordion.click(()=>{
-            if($rootPanel.css('display')==='block'){
-                $rootPanel.css('display','none');
-            }else{
-                $rootPanel.css('display','block');
-            }
-        })
-        $container.append($rootAccordion,$rootPanel);
-        return $container
+        
+        if(reached_options){
+            $rootAccordion.click(()=>{
+                
+                this.Select_option($rootAccordion);
+                $option_menu.empty()
+                $option_menu.append($options)
+                
+            })
+        }else{
+            $rootAccordion.click(()=>{
+                this.Select_accordion($rootAccordion)
+                if($rootPanel.css('display')==='block'){
+                    $rootPanel.css('display','none');
+                    $rootAccordion.removeClass('selected-accordion')
+                }else{
+                    $rootPanel.css('display','block');
+                    $rootAccordion.addClass('selected-accordion')
+                }
+            })
+        }
+        
+        return [$rootAccordion,$rootPanel]
 
     }
 
     Open_(){
-        $("div#edit-popup").css('display', 'block');
+        $("div#edit-popup").css('display', 'flex');
     }
 
     Close_(){
@@ -87,5 +113,15 @@ export class EditPopup {
         }
         if(!this.has_input) return;
         this.$input_container.val("");
+    }
+
+    Select_accordion($accordion){
+        
+    }
+
+    Select_option($option){
+        $('.accordion.selected-option').removeClass('selected-option')
+        $option.addClass("selected-option")
+        
     }
 }
