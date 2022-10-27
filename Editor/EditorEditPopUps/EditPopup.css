@@ -38,6 +38,26 @@
   width: 100%;
 }
 
+
+.edit-option-table{
+  text-align: left;
+  width: 100%;
+}
+.edit-option-table tr{
+  width: 100%;
+}
+.edit-option-table td:nth-of-type(1){
+  width: 70%;
+} 
+.edit-option-table td input[type="text" i] {
+  width: 50%;
+}
+
+.colorpicker{
+  width: 50px !important;
+  height: 27px !important;
+}
+
 .accordion.selected-option{
   background-color: rgb(102, 14, 36) !important;
   color: #ccc !important;

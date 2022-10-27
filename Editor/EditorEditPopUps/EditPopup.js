@@ -119,8 +119,8 @@ export class EditPopup {
      /** @param $options is assigned to open at press of the @param $accordion at the @param $option_menu */
     AssignOpenOptions(selfName,$accordion,options){
         $accordion.click(()=>{
-            this.FindPath(selfName,$accordion)
-            this.StyleEdit.RenderNewOptions(selfName,options)
+            let optionPath = this.FindPath(selfName,$accordion)
+            this.StyleEdit.RenderNewOptions(selfName,options,optionPath)
             this.Select_option($accordion);
             
         })
@@ -146,8 +146,7 @@ export class EditPopup {
 
         }
 
-        console.log($accordion);
-        console.log(arr);
+        return arr;
 
     }
 

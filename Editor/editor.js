@@ -116,6 +116,10 @@ export class Editor {
     commands = new CommandHistory();
 
     theme;
+    StyleEditor = {
+        preview : false,
+        old_theme : null
+    }
     autoPrettyPrint = true;
 
     // themeableIds, themeables, customizableViews for code
@@ -2433,6 +2437,26 @@ export class Editor {
 
     SetupEditPopup(theme){
         this.EditPopup = new EditPopup("editor-popup",theme,this.$editPopupContainer);
+    }
+
+    PreviewTheme(theme){
+        this.StyleEditor.preview = true;
+        this.StyleEditor.old_theme = this.theme;
+        this.theme = theme;
+        this.ApplyTheme();
+    }
+
+    CancelPrevieTheme(theme){
+        this.theme = this.StyleEditor.old_theme
+        this.StyleEditor.preview = false
+        this.ApplyTheme()
+    }
+
+    ApplyTheme(){
+        if(this.StyleEditor.preview == false) return;
+        this.StyleEditor.preview = false;
+
+        //here apply the theme to the json file
     }
     
 }
