@@ -116,10 +116,7 @@ export class Editor {
     commands = new CommandHistory();
 
     theme;
-    StyleEditor = {
-        preview : false,
-        old_theme : null
-    }
+    
     autoPrettyPrint = true;
 
     // themeableIds, themeables, customizableViews for code
@@ -2439,6 +2436,11 @@ export class Editor {
         this.EditPopup = new EditPopup("editor-popup",theme,this.$editPopupContainer);
     }
 
+    StyleEditor = {
+        preview : false,
+        old_theme : null
+    }
+
     PreviewTheme(theme){
         this.StyleEditor.preview = true;
         this.StyleEditor.old_theme = this.theme;
@@ -2452,7 +2454,7 @@ export class Editor {
         this.ApplyTheme()
     }
 
-    ApplyTheme(){
+    AfterPreviewApplyTheme(){
         if(this.StyleEditor.preview == false) return;
         this.StyleEditor.preview = false;
 
