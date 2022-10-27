@@ -1,3 +1,4 @@
+import { StyleEditor } from "./StyleEditor.js"
 export class EditPopup {
 
     
@@ -7,17 +8,21 @@ export class EditPopup {
     $modal
     $modal_content
     $modal_edit_menu
-    $modal_edit_menu_content
+    
     $close_button
     $accordion
 
-
+    StyleEdit
+    $styleEdit
+    theme
     blocks
     //editor-edit-popup-container
     constructor(name, themes, $container){
+        this.theme = themes
         this.blocks = {'General':themes.Blocks.General, "Specific": themes.Blocks.Specific};
         this.name = name;
         this.$container = $container;
+        
         this.Render($container)
     }
 
@@ -32,14 +37,15 @@ export class EditPopup {
         $close_button.click(() => { this.Close_() });
         this.$modal_edit_menu.append($close_button);
 
-        this.$modal_edit_menu_content = $('<div/>')
-        
         
         this.$accordion = $('<div/>')
-        this.$accordion.append(this.CreateAccordion(this.blocks.General,"General",this.$modal_edit_menu_content))
-        this.$accordion.append(this.CreateAccordion(this.blocks.Specific,"Specific",this.$modal_edit_menu_content))
+        this.$accordion.append(this.CreateAccordion(this.blocks.General,"General"))
+        this.$accordion.append(this.CreateAccordion(this.blocks.Specific,"Specific"))
 
-        this.$modal_edit_menu.append(this.$modal_edit_menu_content)
+        this.$styleEdit = $('<div/>').addClass('StyleEditor');
+        this.StyleEdit = new StyleEditor(this.$styleEdit,this.themes)
+
+        this.$modal_edit_menu.append(this.$styleEdit)
         this.$modal_content.append(this.$accordion)
 
         this.$modal.append(this.$modal_content,this.$modal_edit_menu);
@@ -48,13 +54,12 @@ export class EditPopup {
 
     }
 
-    CreateAccordion(rootNode,name,$option_menu){
+    CreateAccordion(rootNode,name){
         
         if (rootNode === null){return null}
         
         let $rootAccordion = $('<button/>').addClass('accordion').html(name)
         let $rootPanel = $('<div/>').addClass("panel")
-        let $options = $('<div/>')
         let reached_options = false;
         for(const key in rootNode){
             if (rootNode.hasOwnProperty(key)) {
@@ -64,23 +69,19 @@ export class EditPopup {
                 if(typeof rootNode[key] === 'object' &&
                 rootNode[key] !== null &&
                 !Array.isArray(rootNode[key])){
-                    $accordion = this.CreateAccordion(rootNode[key],key,$option_menu)
+                    $accordion = this.CreateAccordion(rootNode[key],key)
                 }else{
                     reached_options = true;
-                    $accordion = $("<div/>").addClass("edit-popup-option").html(key)
                 }
                 
                 if(!reached_options){
                     $rootPanel.append($accordion);
-                }else{
-                    $options.append($accordion);
                 }
                 
             }
         }
-        
         if(reached_options){
-            this.AssignOpenOptions($rootAccordion,$option_menu,$options)
+            this.AssignOpenOptions(name,$rootAccordion,rootNode)
         }else{
             this.AssignOpenPanel($rootPanel,$rootAccordion)
         }
@@ -103,6 +104,7 @@ export class EditPopup {
     /** @param $panel is assigned to open at press of the @button $accordion */
     AssignOpenPanel($panel,$accordion){
         $accordion.click(()=>{
+            
             if($panel.css('display')==='block'){
                 $panel.css('display','none');
                 $accordion.removeClass('selected-accordion')
@@ -110,16 +112,16 @@ export class EditPopup {
                 $panel.css('display','block');
                 $accordion.addClass('selected-accordion')
             }
+            
         })
     }
 
      /** @param $options is assigned to open at press of the @param $accordion at the @param $option_menu */
-    AssignOpenOptions($accordion,$option_menu,$options){
+    AssignOpenOptions(selfName,$accordion,options){
         $accordion.click(()=>{
-                
+            this.FindPath(selfName,$accordion)
+            this.StyleEdit.RenderNewOptions(selfName,options)
             this.Select_option($accordion);
-            $option_menu.empty()
-            $option_menu.append($options)
             
         })
     }
@@ -130,8 +132,27 @@ export class EditPopup {
         
     }
 
+    FindPath(selfname,$accordion){
+        let arr = [selfname]
+        
+        let parent = $accordion.parent()
+        let parent_name = ""
+
+        while(parent_name != 'General' && parent_name != 'Specific'){
+            
+            parent_name = parent.prev().text()
+            arr.push(parent_name)
+            parent = parent.parent()
+
+        }
+
+        console.log($accordion);
+        console.log(arr);
+
+    }
+
     ApplyTheme(Themes){
-        console.log(Themes);
+        //console.log(Themes);
         let main_categories = ['.popup-navigation-menu','.popup-edit-menu','.panel']
         main_categories.forEach((category)=>{
             $(category).css(
