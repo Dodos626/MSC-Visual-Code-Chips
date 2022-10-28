@@ -2452,14 +2452,15 @@ export class Editor {
 
     PreviewTheme(theme){
         this.StyleEditor.preview = true;
-        this.StyleEditor.old_theme = this.theme.blocks;
-        this.theme.blocks = theme;
+        this.StyleEditor.old_theme = this.theme.Blocks ;
+        
+        this.theme.Blocks = theme;
         this.ApplyTheme();
     }
 
     CancelPreviewTheme(){
         if(this.StyleEditor.preview == false) return;
-        this.theme.blocks = this.StyleEditor.old_theme
+        this.theme.Blocks  = this.StyleEditor.old_theme
         this.StyleEditor.preview = false
         this.ApplyTheme()
     }
