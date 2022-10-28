@@ -12,21 +12,23 @@ export class EditPopup {
     $close_button
     $accordion
 
+    StyleEditorCallbacks
+
     StyleEdit
     $styleEdit
     theme
     blocks
     //editor-edit-popup-container
-    constructor(name, themes, $container){
-        this.theme = themes
-        this.blocks = {'General':themes.Blocks.General, "Specific": themes.Blocks.Specific};
+    constructor(name, themes, $container, callbacks){
         this.name = name;
         this.$container = $container;
-        
+        this.StyleEditorCallbacks = callbacks
         this.Render($container)
     }
 
     Render($container){
+        this.GetTheme()
+        
         this.$modal = $('<div/>').addClass('modal-edit-popup').attr('id','edit-popup')
         this.$modal_content = $('<div/>').addClass('popup-navigation-menu')
         
@@ -43,7 +45,9 @@ export class EditPopup {
         this.$accordion.append(this.CreateAccordion(this.blocks.Specific,"Specific"))
 
         this.$styleEdit = $('<div/>').addClass('StyleEditor');
-        this.StyleEdit = new StyleEditor(this.$styleEdit,this.themes)
+
+        this.StyleEditorCallbacks.Close = ()=>{this.Close_()}
+        this.StyleEdit = new StyleEditor(this.$styleEdit,this.theme.Blocks,this.StyleEditorCallbacks)
 
         this.$modal_edit_menu.append(this.$styleEdit)
         this.$modal_content.append(this.$accordion)
@@ -51,7 +55,11 @@ export class EditPopup {
         this.$modal.append(this.$modal_content,this.$modal_edit_menu);
         $container.append(this.$modal);
         
+    }
 
+    GetTheme(){
+        this.theme = this.StyleEditorCallbacks.GetTheme()
+        this.blocks = {'General':this.theme.Blocks.General, "Specific": this.theme.Blocks.Specific};
     }
 
     CreateAccordion(rootNode,name){

@@ -38,7 +38,27 @@
   width: 100%;
 }
 
-
+.StyleEditor{
+  height: 100%;
+}
+.edit-option{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: 100%;
+}
+.edit-option .button-container{
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+.edit-option .button-container button{
+  width: auto;
+  padding: 5px 10px;
+}
 .edit-option-table{
   text-align: left;
   width: 100%;

@@ -1,15 +1,17 @@
 export class StyleEditor {
     ThemeWhole
-    ThemePart
-    OptionPath
+    ThemeDefault
     $container
     $self
+    callbacks
 
 
-    constructor($container,theme){
+    constructor($container,theme,callbacks){
         this.$container = $container;
         this.ThemeWhole = theme;
-        this.$self = $('<div/>')
+        this.ThemeDefault = theme;
+        this.$self =$("<div/>").addClass('edit-option')
+        this.callbacks = callbacks
         this.Render(this.$container);
     }
 
@@ -18,26 +20,41 @@ export class StyleEditor {
     }
 
     RenderNewOptions(name,options,optionPath){
-        this.OptionPath = optionPath;
         this.$self.empty()
-        this.$self = $("<div/>").addClass('edit-option')
+
         let $title = $("<div/>").addClass('edit-option-title').html('<h1>'+name+'</h1>')
         let $table = $("<table/>").addClass('edit-option-table')
 
         for(let key in options){
             let row = $("<tr/>")
             let collumn = [$('<td/>'),$('<td/>')]
-            collumn[0].append($('<label for='+key+'>').html(key))
-            collumn[1].append($(this.objDispatch[key][0]).addClass(this.objDispatch[key][1]).val(this.DecideValue(options[key],key)))
+            let $label = $('<label for='+key+'>').html(key)
+            let $option_element = $(this.objDispatch[key][0]).addClass(this.objDispatch[key][1]).val(this.DecideValue(options[key],key))
+            
+            $option_element.change(()=>{this.OnChangeOption($option_element,optionPath)})
+            collumn[0].append($label)
+            collumn[1].append($option_element)
             
             row.append(collumn[0],collumn[1])
             
             $table.append(row)
             
         }
-        console.log(options);
         this.$self.append($title,$table)
+        
+        this.$self.append(this.RenderAndReadyButtons())
         this.Render(this.$container)
+    }
+
+    RenderAndReadyButtons(){
+        let $button_container = $('<div/>').addClass('button-container')
+        let $preview_button = $('<button/>').html('Preview').click(()=>{this.PreviewButton()})
+        let $cancel_button = $('<button/>').html('Cancel').click(()=>{this.CancelButton()})
+
+
+
+        $button_container.append($preview_button,$cancel_button)
+        return $button_container
     }
 
     objDispatch = {
@@ -56,10 +73,30 @@ export class StyleEditor {
         Gap : ["<input type=\"text\" id=\"Gap\" name=\"Gap\">","popup-edit-input"],
     }
 
+    CancelButton(){
+        this.ThemeWhole = this.ThemeDefault; 
+        this.callbacks.CancelPreviewTheme();
+        this.callbacks.Close();   
+        console.log(this.callbacks);
+    }
+
+    PreviewButton(){
+        console.log(this.ThemeWhole);
+        this.callbacks.PreviewTheme(this.ThemeWhole)
+        this.callbacks.Close()
+    }
     
     DecideValue(val,key){
         if(key.includes('color')) return this.colorToHex(val)
         return val
+    }
+
+    OnChangeOption($option_element,optionPath){
+        let theme = this.ThemeWhole
+        for(let i = optionPath.length-1 ; i >= 0 ; i--){
+            theme = theme[optionPath[i]]
+        }
+        theme[$option_element.attr('id')] = $option_element.val()        
     }
     
     

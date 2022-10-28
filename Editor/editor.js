@@ -2433,7 +2433,7 @@ export class Editor {
     }
 
     SetupEditPopup(theme){
-        this.EditPopup = new EditPopup("editor-popup",theme,this.$editPopupContainer);
+        this.EditPopup = new EditPopup("editor-popup",theme,this.$editPopupContainer,this.StyleEditorCallbacks());
     }
 
     StyleEditor = {
@@ -2441,15 +2441,25 @@ export class Editor {
         old_theme : null
     }
 
+    StyleEditorCallbacks(){
+        return {
+            PreviewTheme : (theme)=>{this.PreviewTheme(theme)},
+            CancelPreviewTheme : ()=>{this.CancelPreviewTheme()},
+            AfterPreviewApplyTheme : ()=>{this.AfterPreviewApplyTheme()},
+            GetTheme : ()=>{return this.theme}
+        }
+    }
+
     PreviewTheme(theme){
         this.StyleEditor.preview = true;
-        this.StyleEditor.old_theme = this.theme;
-        this.theme = theme;
+        this.StyleEditor.old_theme = this.theme.blocks;
+        this.theme.blocks = theme;
         this.ApplyTheme();
     }
 
-    CancelPrevieTheme(theme){
-        this.theme = this.StyleEditor.old_theme
+    CancelPreviewTheme(){
+        if(this.StyleEditor.preview == false) return;
+        this.theme.blocks = this.StyleEditor.old_theme
         this.StyleEditor.preview = false
         this.ApplyTheme()
     }
@@ -2460,5 +2470,6 @@ export class Editor {
 
         //here apply the theme to the json file
     }
+
     
 }
