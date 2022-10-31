@@ -2455,6 +2455,7 @@ export class Editor {
         this.StyleEditor.old_theme = this.theme.Blocks ;
         
         this.theme.Blocks = theme;
+        console.log(this.theme.Blocks);
         this.ApplyTheme();
     }
 

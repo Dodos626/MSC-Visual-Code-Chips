@@ -41,8 +41,10 @@ export class EditPopup {
 
         
         this.$accordion = $('<div/>')
+        console.log(this.blocks, this.theme);
         this.$accordion.append(this.CreateAccordion(this.blocks.General,"General"))
         this.$accordion.append(this.CreateAccordion(this.blocks.Specific,"Specific"))
+        this.$accordion.append(this.CreateAccordion(this.blocks.Composite,"Composite"))
 
         this.$styleEdit = $('<div/>').addClass('StyleEditor');
 
@@ -59,7 +61,10 @@ export class EditPopup {
 
     GetTheme(){
         this.theme = this.StyleEditorCallbacks.GetTheme()
-        this.blocks = {'General':this.theme.Blocks.General, "Specific": this.theme.Blocks.Specific};
+        this.blocks = {'General':this.theme.Blocks.General, 
+                        "Specific": this.theme.Blocks.Specific, 
+                        'Composite': this.theme.Blocks.Composite
+                    };
     }
 
     CreateAccordion(rootNode,name){
@@ -146,7 +151,7 @@ export class EditPopup {
         let parent = $accordion.parent()
         let parent_name = ""
 
-        while(parent_name != 'General' && parent_name != 'Specific'){
+        while(parent_name != 'General' && parent_name != 'Specific' && parent_name != 'Composite'){
             
             parent_name = parent.prev().text()
             arr.push(parent_name)
