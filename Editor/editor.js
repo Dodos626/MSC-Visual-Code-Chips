@@ -59,6 +59,7 @@ export class Editor {
 
     EditPopup
     $editPopupContainer;
+    StyleEditorPreview = false;
 
     language;
     code;
@@ -68,6 +69,10 @@ export class Editor {
     undoToastMessageVisible = false;
     undoToastMessageDisabled = false;
     undoToastMessage;
+
+    editThemeToastMessageVisible = false;
+    editThemeToastMessageDisabled = false;
+    editThemeToastMessage;
 
     editorToolbar;
 
@@ -750,7 +755,7 @@ export class Editor {
                     name:       'Edit Theme',
                     shortcut:   'Ctrl+E+T',
                     disabled:   () => this.viewMode !== EditorElementViewMode.BlockView,
-                    handler:    () => this.EditPopup.Open_()
+                    handler:    () => {this.EditPopup.Open_()}
                 },
             ],
         ]);
@@ -2436,10 +2441,7 @@ export class Editor {
         this.EditPopup = new EditPopup("editor-popup",theme,this.$editPopupContainer,this.StyleEditorCallbacks());
     }
 
-    StyleEditor = {
-        preview : false,
-        old_theme : null
-    }
+    
 
     StyleEditorCallbacks(){
         return {
@@ -2451,27 +2453,71 @@ export class Editor {
     }
 
     PreviewTheme(theme){
-        this.StyleEditor.preview = true;
-        this.StyleEditor.old_theme = this.theme.Blocks ;
-        
+        this.StyleEditorPreview = true;
         this.theme.Blocks = theme;
-        console.log(this.theme.Blocks);
+        
         this.ApplyTheme();
+        this.AppendEditThemeToastMessage();
     }
 
     CancelPreviewTheme(){
-        if(this.StyleEditor.preview == false) return;
-        this.theme.Blocks  = this.StyleEditor.old_theme
-        this.StyleEditor.preview = false
+        
+        if(this.StyleEditorPreview == false) return;
+        this.EditPopup.ResetTheme();
+        this.StyleEditorPreview = false
         this.ApplyTheme()
     }
 
     AfterPreviewApplyTheme(){
-        if(this.StyleEditor.preview == false) return;
-        this.StyleEditor.preview = false;
-
+        if(this.StyleEditorPreview == false) return;
+        this.StyleEditorPreview = false;
+        console.log("theme applied");
         //here apply the theme to the json file
     }
+
+    AppendEditThemeToastMessage(){
+        this.editThemeToastMessageVisible = true;
+
+        this.editThemeToastMessage = new ToastMessage({
+            type: ToastMessage.Types.Information,
+            title: 'Keep the changes',
+            explanation:    `Keep or Revert the theme changes`,
+            buttons: [
+                {
+                    name: 'Keep',
+                    handler: (toastMessage) => {
+                        this.editThemeToastMessageVisible = false;
+                        toastMessage.Destroy();
+                        this.AfterPreviewApplyTheme();
+                    }
+                },
+                {
+                    name: 'Keep and don\'t show this again',
+                    handler: (toastMessage) => { 
+                        this.editThemeToastMessageVisible = false, this.editThemeToastMessageDisabled = true; 
+                        toastMessage.Destroy();
+
+                        this.AfterPreviewApplyTheme();
+                    }
+                },
+                {
+                    name: 'Revert',
+                    handler: (toastMessage) => {
+                        this.editThemeToastMessageVisible = false, toastMessage.Destroy();
+                        this.CancelPreviewTheme();
+                    }
+                }
+            ]
+        });
+
+        this.editThemeToastMessage.SetOnClose( () => {
+            this.CancelPreviewTheme();
+        });
+
+        this.AppendToastMessage(this.editThemeToastMessage);
+    }
+    
+    
 
     
 }

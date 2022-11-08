@@ -1,6 +1,6 @@
 export class StyleEditor {
     ThemeWhole
-    ThemeDefault
+    
     $container
     $self
     callbacks
@@ -9,7 +9,8 @@ export class StyleEditor {
     constructor($container,theme,callbacks){
         this.$container = $container;
         this.ThemeWhole = theme;
-        this.ThemeDefault = theme;
+        this.OriginalValues = new Map();
+        
         this.$self =$("<div/>").addClass('edit-option')
         this.callbacks = callbacks
         this.Render(this.$container);
@@ -74,14 +75,13 @@ export class StyleEditor {
     }
 
     CancelButton(){
-        this.ThemeWhole = this.ThemeDefault; 
+        this.ResetValues()
         this.callbacks.CancelPreviewTheme();
         this.callbacks.Close();   
         console.log(this.callbacks);
     }
 
     PreviewButton(){
-        console.log(this.ThemeWhole);
         this.callbacks.PreviewTheme(this.ThemeWhole)
         this.callbacks.Close()
     }
@@ -92,13 +92,34 @@ export class StyleEditor {
     }
 
     OnChangeOption($option_element,optionPath){
-        let theme = this.ThemeWhole
-        for(let i = optionPath.length-1 ; i >= 0 ; i--){
-            theme = theme[optionPath[i]]
+        let theme = this.TraverseOption(optionPath)
+        
+        let tmp_optionPath = optionPath.concat($option_element.attr('id'))
+        
+        let joined_path = tmp_optionPath.join('.')
+        if(! this.OriginalValues.has(joined_path)){
+            this.OriginalValues.set(joined_path,theme[$option_element.attr('id')])
         }
+        
         theme[$option_element.attr('id')] = $option_element.val()        
     }
-    
+
+    ResetValues(){
+        this.OriginalValues.forEach((value,path)=>{
+            let path_array = path.split('.');
+            let attr = path_array.pop()
+            
+            this.TraverseOption(path_array)[attr] = value;
+        })
+        this.OriginalValues.clear()
+    }
+    TraverseOption(path){
+        let theme = this.ThemeWhole
+        for(let i = path.length-1 ; i >= 0 ; i--){
+            theme = theme[path[i]]
+        }
+        return theme
+    }
     
     colorToRGBA(color) {
         // Returns the color as an array of [r, g, b, a] -- all range from 0 - 255

@@ -184,4 +184,8 @@ export class EditPopup {
         
         
     }
+
+    ResetTheme(){
+        this.StyleEdit.ResetValues();
+    }
 }

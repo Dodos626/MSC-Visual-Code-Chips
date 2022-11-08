@@ -1,13 +1,7 @@
 
 TODO:
+otan kanw edit kai meta apply , sto epomeno revert na girnaei sto default i sto last checkpoint ?
 
-na kanw edit ta blocks , ta general einai gia oles tis glwsses ta specific
-einai language based .
-
-na pernaw to highlight toolbox sto toolbox kai na to kalei gia ton eauto
-    tou kathe fora pu kanei kapoio action (px move command)
-
-Ta undo redo buttons kai to focus na kanoun update gia kathe action
 
 otan tha mporw na fortwsw mia glwssa na mporw me gui na peirazw ta themes kai na exw apply / preview
 
@@ -25,6 +19,14 @@ dc : Input in new / category can be vulnerable to xss attack
 
 
 DONE:
+
+na kanw edit ta blocks , ta general einai gia oles tis glwsses ta specific
+einai language based .
+
+na pernaw to highlight toolbox sto toolbox kai na to kalei gia ton eauto
+    tou kathe fora pu kanei kapoio action (px move command)
+
+Ta undo redo buttons kai to focus na kanoun update gia kathe action
 
 otan kanw focus ston editor na ginete highlight border i ama ginete focus to toolbar antistoixa
 ta undo redo anaferontai sto focused menu 
