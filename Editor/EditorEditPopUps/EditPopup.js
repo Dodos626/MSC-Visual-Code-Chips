@@ -188,4 +188,8 @@ export class EditPopup {
     ResetTheme(){
         this.StyleEdit.ResetValues();
     }
+
+    AcceptTheme(){
+        this.StyleEdit.DropValues();
+    }
 }

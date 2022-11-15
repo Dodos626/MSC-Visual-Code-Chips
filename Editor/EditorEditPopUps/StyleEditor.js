@@ -120,6 +120,10 @@ export class StyleEditor {
         }
         return theme
     }
+
+    DropValues(){
+        this.OriginalValues.clear()
+    }
     
     colorToRGBA(color) {
         // Returns the color as an array of [r, g, b, a] -- all range from 0 - 255
@@ -155,6 +159,7 @@ export class StyleEditor {
             ).join('');
         return "#"+hex;
     }
+    
 
 }
 

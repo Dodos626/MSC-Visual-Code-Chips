@@ -2471,7 +2471,7 @@ export class Editor {
     AfterPreviewApplyTheme(){
         if(this.StyleEditorPreview == false) return;
         this.StyleEditorPreview = false;
-        console.log("theme applied");
+        this.EditPopup.AcceptTheme();
         //here apply the theme to the json file
     }
 
