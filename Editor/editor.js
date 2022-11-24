@@ -2438,6 +2438,7 @@ export class Editor {
     }
 
     SetupEditPopup(theme){
+        console.log(theme);
         this.EditPopup = new EditPopup("editor-popup",theme,this.$editPopupContainer,this.StyleEditorCallbacks());
     }
 
@@ -2453,8 +2454,13 @@ export class Editor {
     }
 
     PreviewTheme(theme){
+       
+        delete this.theme.Blocks.Composite
+        console.log(this.theme);
+        debugger
         this.StyleEditorPreview = true;
-        this.theme.Blocks = theme;
+      
+        //this.SetTheme(this.theme)
         
         this.ApplyTheme();
         this.AppendEditThemeToastMessage();
