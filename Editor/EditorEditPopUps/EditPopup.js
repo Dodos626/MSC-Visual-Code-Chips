@@ -105,6 +105,12 @@ export class EditPopup {
 
     Open_(){
         $("div#edit-popup").css('display', 'flex');
+
+        
+        let selected = $('.accordion.selected-option'); //checks if there is something selected
+        if(selected.length != 0){
+            selected.click() //if something is selected it clicks it to refresh it
+        }
     }
 
     Close_(){
