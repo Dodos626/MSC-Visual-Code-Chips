@@ -44,7 +44,6 @@ export class EditPopup {
         console.log(this.blocks, this.theme);
         this.$accordion.append(this.CreateAccordion(this.blocks.General,"General"))
         this.$accordion.append(this.CreateAccordion(this.blocks.Specific,"Specific"))
-        this.$accordion.append(this.CreateAccordion(this.blocks.Composite,"Composite"))
 
         this.$styleEdit = $('<div/>').addClass('StyleEditor');
 
@@ -63,7 +62,6 @@ export class EditPopup {
         this.theme = this.StyleEditorCallbacks.GetTheme()
         this.blocks = {'General':this.theme.Blocks.General, 
                         "Specific": this.theme.Blocks.Specific, 
-                        'Composite': this.theme.Blocks.Composite
                     };
     }
 

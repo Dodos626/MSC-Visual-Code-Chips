@@ -401,6 +401,7 @@ export class Editor {
         this.toolbox.ApplyTheme(this.theme['Toolbox']);
         this.toolbarModal.ApplyTheme(this.theme['Toolbox']);
         this.EditPopup.ApplyTheme(this.theme['Toolbox']);
+
         this.code.ForEachRec(elem => {
             elem.ApplyViewMode(this.viewMode);
         });
@@ -2453,15 +2454,17 @@ export class Editor {
         }
     }
 
-    PreviewTheme(theme){
-       
+    PreviewTheme(blockTheme){
         delete this.theme.Blocks.Composite
-        console.log(this.theme);
-        debugger
-        this.StyleEditorPreview = true;
-      
-        //this.SetTheme(this.theme)
         
+        
+        this.StyleEditorPreview = true;
+        
+        this.SetTheme({
+            ...this.theme,
+            Blocks: blockTheme
+        });
+
         this.ApplyTheme();
         this.AppendEditThemeToastMessage();
     }
