@@ -121,6 +121,12 @@ export class Editor {
     commands = new CommandHistory();
 
     theme;
+
+    // this holds the json format of the theme
+    // so we able to re - create it
+    construction_theme;
+
+    temp_theme;
     
     autoPrettyPrint = true;
 
@@ -248,8 +254,13 @@ export class Editor {
 
         this.$container = $container;
         this.language = language;
+
         
+        
+        this.construction_theme = JSON.parse(JSON.stringify(themeJson));
+
         this.SetTheme(themeJson);
+        
         
         this.InitializeCode_();
         this.InitializeView_();
@@ -261,6 +272,7 @@ export class Editor {
         
         this.SetWorkspace_DragAndDrop();
 
+        
         this.SetupModal_NewCategory();
         this.SetupEditPopup(this.theme);
         this.SetUpEditorToolbar_();
@@ -273,6 +285,7 @@ export class Editor {
 
         this.productionPaths = this.language.ComputeReachabilityMatrix();
         // console.log(this.productionPaths);
+        
         this.FocusWorkspace();
     }
 
@@ -2447,26 +2460,40 @@ export class Editor {
 
     StyleEditorCallbacks(){
         return {
-            PreviewTheme : (theme)=>{this.PreviewTheme(theme)},
+            PreviewTheme : (theme, revert)=>{this.PreviewTheme(theme,revert)},
             CancelPreviewTheme : ()=>{this.CancelPreviewTheme()},
             AfterPreviewApplyTheme : ()=>{this.AfterPreviewApplyTheme()},
             GetTheme : ()=>{return this.theme}
         }
     }
 
-    PreviewTheme(blockTheme){
-        delete this.theme.Blocks.Composite
+    PreviewTheme(blockTheme, revert){
+        // delete this.theme.Blocks.Composite
+
         
+
+
+        this.temp_theme = JSON.parse(JSON.stringify(this.theme));
+         
+        if (!revert) {
+            this.StyleEditorPreview = true;
+        }
         
-        this.StyleEditorPreview = true;
-        
+
+
         this.SetTheme({
-            ...this.theme,
+            ...this.construction_theme,
             Blocks: blockTheme
-        });
+        })
+        
+        
 
         this.ApplyTheme();
-        this.AppendEditThemeToastMessage();
+
+        if (!revert) {
+            this.AppendEditThemeToastMessage();
+        }
+       
     }
 
     CancelPreviewTheme(){
@@ -2474,6 +2501,7 @@ export class Editor {
         if(this.StyleEditorPreview == false) return;
         this.EditPopup.ResetTheme();
         this.StyleEditorPreview = false
+
         this.ApplyTheme()
     }
 

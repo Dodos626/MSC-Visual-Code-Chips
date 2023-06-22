@@ -77,7 +77,10 @@ export class StyleEditor {
     CancelButton(){
         this.ResetValues()
         this.callbacks.CancelPreviewTheme();
+        
+        
         this.callbacks.Close();   
+        
         console.log(this.callbacks);
     }
 
@@ -112,6 +115,7 @@ export class StyleEditor {
             this.TraverseOption(path_array)[attr] = value;
         })
         this.OriginalValues.clear()
+        this.callbacks.PreviewTheme(this.ThemeWhole , true)
     }
     TraverseOption(path){
         let theme = this.ThemeWhole

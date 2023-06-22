@@ -41,14 +41,14 @@ export class EditPopup {
 
         
         this.$accordion = $('<div/>')
-        console.log(this.blocks, this.theme);
+        // console.log(this.blocks, this.theme);
         this.$accordion.append(this.CreateAccordion(this.blocks.General,"General"))
         this.$accordion.append(this.CreateAccordion(this.blocks.Specific,"Specific"))
 
         this.$styleEdit = $('<div/>').addClass('StyleEditor');
 
         this.StyleEditorCallbacks.Close = ()=>{this.Close_()}
-        this.StyleEdit = new StyleEditor(this.$styleEdit,this.theme.Blocks,this.StyleEditorCallbacks)
+        this.StyleEdit = new StyleEditor(this.$styleEdit,this.blocks,this.StyleEditorCallbacks)
 
         this.$modal_edit_menu.append(this.$styleEdit)
         this.$modal_content.append(this.$accordion)
@@ -59,9 +59,8 @@ export class EditPopup {
     }
 
     GetTheme(){
-        this.theme = this.StyleEditorCallbacks.GetTheme()
-        this.blocks = {'General':this.theme.Blocks.General, 
-                        "Specific": this.theme.Blocks.Specific, 
+        this.blocks = {'General':this.StyleEditorCallbacks.GetTheme().Blocks.General, 
+                        "Specific": this.StyleEditorCallbacks.GetTheme().Blocks.Specific, 
                     };
     }
 
