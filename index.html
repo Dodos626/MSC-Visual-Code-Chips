@@ -1,8 +1,11 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Code-Chips</title>
 
-<head>
-    <title>Code Chips </title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&family=Roboto:wght@400;500&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="editor.css">
@@ -10,21 +13,21 @@
     <link rel="stylesheet" href="./Editor/EditorEditPopUps/EditPopup.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js">
     </script>
-    <script type="module" src="app.js"></script>
-</head>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/main.js"></script>
 
-<body>
     <div id="selections">
-        <select id="language-selection">
-            <option value="Code Chips"> Code Chips Lang</option>
-            <option value="Java Classes"> Java Classes </option>
-        </select>
+      <select id="language-selection">
+          <option value="Code Chips"> Code Chips Lang</option>
+          <option value="Java Classes"> Java Classes </option>
+      </select>
 
-        <select id="theme-selection"> </select>
+      <select id="theme-selection"> </select>
     </div>
 
     <div id="injection-div1"> </div>
     <div id="injection-div2"> </div>
-</body>
-
+  </body>
 </html>

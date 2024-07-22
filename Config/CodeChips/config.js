@@ -1,5 +1,5 @@
 import langConfig  from './LangConfig.json' assert {type: 'json'}
-import {toolboxConfig} from './toolboxConfig.js'
+import {toolboxConfig} from './ToolboxConfig.js'
 import  quickReplaceConfig from './quickReplaceConfig.json' assert {type: 'json'}
 import  darkThemeConfig from './Themes/darkTheme.json' assert {type: 'json'}
 import  lightThemeConfig  from './Themes/lightTheme.json' assert {type: 'json'}
